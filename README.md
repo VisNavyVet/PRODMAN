@@ -19,7 +19,7 @@ Claude Code gives you native slash commands — but any AI tool works.
 ### Install
 
 ```bash
-git clone https://github.com/your-org/prodman.git
+git clone https://github.com/VisNavyVet/PRODMAN.git
 cd prodman
 ```
 
