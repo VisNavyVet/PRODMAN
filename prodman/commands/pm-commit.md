@@ -45,4 +45,12 @@ After generating the commitment document, ask:
 
 "Does this capture your direction accurately? Any corrections before we proceed?"
 
-Once confirmed, say: "Committed. Type `/pm-ff` to generate the full spec bundle, or `/pm-research` if you need to validate assumptions first."
+Once confirmed:
+
+1. Derive a kebab-case feature name from the problem statement or direction (e.g., `order-history-search`). Confirm it with the PM in one line: "Saving as `[feature-name]` — ok or change it?"
+
+2. Write the confirmed commitment document to `features/[feature-name]/commitment.md`.
+
+3. Say: "Committed. Saved to `features/[feature-name]/commitment.md`.
+
+Type `/pm-ff [feature-name]` to generate the full spec bundle, or `/pm-research` to validate assumptions first."

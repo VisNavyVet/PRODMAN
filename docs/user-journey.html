@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProdMan — User Journey</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3248;
+    --accent: #6b7fff;
+    --accent2: #a78bfa;
+    --accent3: #34d399;
+    --accent4: #f59e0b;
+    --accent5: #f87171;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --muted2: #94a3b8;
+    --z1: #6b7fff;
+    --z2: #a78bfa;
+    --z3: #34d399;
+    --z4: #f59e0b;
+    --z5: #f87171;
+    --zu: #64748b;
+    --pain: #f87171;
+    --solve: #34d399;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 14px;
+    scroll-behavior: smooth;
+  }
+
+  /* ── NAV ── */
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15,17,23,0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    overflow-x: auto;
+  }
+  .topnav a {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted2);
+    text-decoration: none;
+    padding: 12px 14px;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .topnav a:hover { color: var(--text); }
+  .topnav .nav-sep { color: var(--border); padding: 0 2px; font-size: 16px; }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 36px 48px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .header-left h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .header-left p {
+    color: var(--muted2);
+    font-size: 14px;
+    max-width: 520px;
+    line-height: 1.7;
+  }
+  .header-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+  .badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  .badge-blue { color: var(--accent); border-color: var(--accent); }
+  .badge-green { color: var(--accent3); border-color: var(--accent3); }
+  .badge-purple { color: var(--accent2); border-color: var(--accent2); }
+  .badge-amber { color: var(--accent4); border-color: var(--accent4); }
+
+  .legend {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    flex-shrink: 0;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted2);
+  }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── MAIN ── */
+  .main { padding: 40px 48px; max-width: 1400px; margin: 0 auto; }
+  .section-divider { height: 1px; background: var(--border); margin: 16px 0 40px 0; }
+
+  /* ── SECTION HEADERS ── */
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.3px;
+    margin-bottom: 6px;
+  }
+  .section-desc {
+    font-size: 13px;
+    color: var(--muted2);
+    margin-bottom: 28px;
+    max-width: 600px;
+  }
+
+  /* ── MEMORY BAR ── */
+  .memory-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 36px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .memory-bar-icon {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    background: rgba(107,127,255,0.15);
+    border: 1px solid rgba(107,127,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .memory-bar-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+  .memory-files {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+    flex-wrap: wrap;
+  }
+  .memory-file {
+    font-size: 11px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    color: var(--accent);
+    background: rgba(107,127,255,0.1);
+    border: 1px solid rgba(107,127,255,0.25);
+    padding: 3px 10px;
+    border-radius: 5px;
+  }
+
+  /* ── FULL FLOW ── */
+  .full-flow {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 40px;
+  }
+  .full-flow-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 24px;
+  }
+  .flow-steps {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .flow-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .flow-step-node {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .flow-step-label {
+    font-size: 11px;
+    text-align: center;
+    font-weight: 600;
+    max-width: 72px;
+    line-height: 1.4;
+  }
+  .flow-step-cmd {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 9px;
+    text-align: center;
+    max-width: 84px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .flow-line {
+    flex: 1;
+    height: 2px;
+    min-width: 16px;
+    background: var(--border);
+    margin-bottom: 46px;
+    flex-shrink: 0;
+  }
+
+  /* ── ZONE SECTIONS ── */
+  .zone { margin-bottom: 48px; }
+  .zone-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .zone-pill {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid;
+    flex-shrink: 0;
+  }
+  .zone-title { font-size: 16px; font-weight: 600; color: #fff; }
+  .zone-subtitle { font-size: 12px; color: var(--muted2); margin-left: auto; font-style: italic; }
+
+  .z1 .zone-pill { color: var(--z1); border-color: var(--z1); background: rgba(107,127,255,0.08); }
+  .z2 .zone-pill { color: var(--z2); border-color: var(--z2); background: rgba(167,139,250,0.08); }
+  .z3 .zone-pill { color: var(--z3); border-color: var(--z3); background: rgba(52,211,153,0.08); }
+  .z4 .zone-pill { color: var(--z4); border-color: var(--z4); background: rgba(245,158,11,0.08); }
+  .z5 .zone-pill { color: var(--z5); border-color: var(--z5); background: rgba(248,113,113,0.08); }
+  .zu .zone-pill { color: var(--muted2); border-color: var(--border); background: rgba(100,116,139,0.08); }
+
+  /* ── COMMAND CARDS ── */
+  .command-flow {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .cmd-block { display: flex; align-items: stretch; gap: 0; }
+  .cmd-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 18px 14px;
+    min-width: 210px;
+    max-width: 250px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .cmd-card.wide { min-width: 340px; max-width: 440px; }
+  .cmd-card:hover { border-color: var(--muted); }
+
+  .cmd-name {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  .cmd-tagline { font-size: 11px; color: var(--muted2); margin-bottom: 12px; line-height: 1.5; }
+  .cmd-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    margin-bottom: 4px;
+    margin-top: 10px;
+  }
+  .cmd-items { display: flex; flex-direction: column; gap: 3px; }
+  .cmd-item {
+    font-size: 11px;
+    color: var(--muted2);
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    line-height: 1.4;
+  }
+  .cmd-item::before { content: '·'; color: var(--muted); flex-shrink: 0; }
+
+  .cmd-output {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .output-file {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin: 2px 2px 0 0;
+    display: inline-block;
+  }
+
+  /* Pain / Solve rows inside cards */
+  .pain-solve {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+  }
+  .pain-row, .solve-row {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    font-size: 10.5px;
+    line-height: 1.45;
+  }
+  .pain-tag, .solve-tag {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .pain-tag { background: rgba(248,113,113,0.12); color: var(--pain); border: 1px solid rgba(248,113,113,0.25); }
+  .solve-tag { background: rgba(52,211,153,0.1); color: var(--solve); border: 1px solid rgba(52,211,153,0.2); }
+  .pain-row span { color: #cbd5e1; }
+  .solve-row span { color: #cbd5e1; }
+
+  /* Zone-colored names and output files */
+  .z1 .cmd-name { color: var(--z1); }
+  .z1 .output-file { color: var(--z1); background: rgba(107,127,255,0.1); border: 1px solid rgba(107,127,255,0.2); }
+  .z2 .cmd-name { color: var(--z2); }
+  .z2 .output-file { color: var(--z2); background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.2); }
+  .z3 .cmd-name { color: var(--z3); }
+  .z3 .output-file { color: var(--z3); background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.2); }
+  .z4 .cmd-name { color: var(--z4); }
+  .z4 .output-file { color: var(--z4); background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); }
+  .z5 .cmd-name { color: var(--z5); }
+  .z5 .output-file { color: var(--z5); background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.2); }
+  .zu .cmd-name { color: var(--muted2); }
+  .zu .output-file { color: var(--muted2); background: rgba(100,116,139,0.1); border: 1px solid rgba(100,116,139,0.2); }
+
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    flex-shrink: 0;
+    color: var(--muted);
+    font-size: 18px;
+    margin-top: -12px;
+  }
+  .handoff-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 12px;
+  }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.25);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #d4a044;
+    margin-top: 16px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  /* ── COMPARISON TABLE ── */
+  .comparison-wrap {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .comparison-table th {
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .comparison-table th:first-child { color: var(--muted); background: var(--surface); }
+  .comparison-table th.th-llm { color: var(--pain); background: rgba(248,113,113,0.05); }
+  .comparison-table th.th-pm { color: var(--solve); background: rgba(52,211,153,0.05); }
+
+  .comparison-table td {
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.55;
+  }
+  .comparison-table tr:last-child td { border-bottom: none; }
+  .comparison-table td:first-child {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--muted2);
+    background: var(--surface);
+    white-space: nowrap;
+  }
+  .comparison-table td.cell-llm {
+    color: #e2e8f0;
+    background: rgba(248,113,113,0.03);
+  }
+  .comparison-table td.cell-pm {
+    color: #e2e8f0;
+    background: rgba(52,211,153,0.03);
+  }
+  .comparison-table tr:hover td { filter: brightness(1.08); }
+
+  .verdict-bad {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--pain);
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .verdict-good {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--solve);
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .verdict-bad::before { content: '✗'; }
+  .verdict-good::before { content: '✓'; }
+
+  /* ── AGENTIC BENEFITS ── */
+  .agentic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .agentic-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 22px 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .agentic-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent2);
+  }
+  .agentic-number {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent2);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+  }
+  .agentic-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    letter-spacing: -0.2px;
+  }
+  .agentic-desc {
+    font-size: 12px;
+    color: var(--muted2);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .agentic-without {
+    font-size: 11px;
+    color: var(--pain);
+    background: rgba(248,113,113,0.08);
+    border: 1px solid rgba(248,113,113,0.2);
+    border-radius: 6px;
+    padding: 6px 10px;
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+  .agentic-with {
+    font-size: 11px;
+    color: var(--solve);
+    background: rgba(52,211,153,0.07);
+    border: 1px solid rgba(52,211,153,0.18);
+    border-radius: 6px;
+    padding: 6px 10px;
+    line-height: 1.5;
+  }
+  .agentic-without::before { content: 'Without: '; font-weight: 700; }
+  .agentic-with::before { content: 'With ProdMan: '; font-weight: 700; }
+
+  /* Agent brief anatomy */
+  .brief-anatomy {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 48px;
+  }
+  .brief-anatomy-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent2);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 18px;
+  }
+  .anatomy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+  }
+  .anatomy-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .anatomy-field {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent2);
+    margin-bottom: 4px;
+  }
+  .anatomy-why {
+    font-size: 11px;
+    color: var(--muted2);
+    line-height: 1.5;
+  }
+
+  /* ── RETRO LOOP ── */
+  .retro-loop {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-top: 16px;
+  }
+  .retro-loop-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent3);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 10px;
+  }
+  .retro-loop-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--muted2);
+    flex-wrap: wrap;
+  }
+  .retro-loop-node {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .retro-loop-arrow { color: var(--muted); font-size: 14px; flex-shrink: 0; }
+
+  /* ── OUTPUT MAP ── */
+  .output-map-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+    margin-bottom: 48px;
+  }
+  .output-map-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .output-map-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 10px;
+  }
+  .output-map-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  footer a { color: var(--muted2); text-decoration: none; }
+  footer a:hover { color: var(--text); }
+
+  @media (max-width: 768px) {
+    .topnav { padding: 0 16px; }
+    .header { padding: 20px 20px; flex-direction: column; }
+    .main { padding: 24px 20px; }
+    footer { padding: 16px 20px; flex-direction: column; gap: 8px; }
+    .memory-files { margin-left: 0; }
+    .zone-subtitle { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="topnav">
+  <a href="#flow">Flow</a>
+  <span class="nav-sep">|</span>
+  <a href="#utility">Setup</a>
+  <a href="#zone1">Zone 1</a>
+  <a href="#zone3">Research</a>
+  <a href="#zone2">Planning</a>
+  <a href="#zone4">Handover</a>
+  <a href="#zone5">Ship</a>
+  <span class="nav-sep">|</span>
+  <a href="#comparison">LLM vs ProdMan</a>
+  <a href="#agentic">Agentic Benefits</a>
+  <a href="#outputs">Output Map</a>
+</nav>
+
+<!-- ── HEADER ── -->
+<div class="header">
+  <div class="header-left">
+    <h1>ProdMan — User Journey</h1>
+    <p>End-to-end workflow from raw signal to shipped feature with persistent product memory. Every session loads your context automatically — and gets smarter after every retro.</p>
+    <div class="header-badges">
+      <span class="badge badge-blue">12 Commands</span>
+      <span class="badge badge-green">5 Zones</span>
+      <span class="badge badge-purple">AI Agnostic</span>
+      <span class="badge badge-amber">Agent-First Output</span>
+    </div>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--z1)"></div>Zone 1 — Materialization</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--z2)"></div>Zone 2 — Planning</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--z3)"></div>Zone 3 — Research</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--z4)"></div>Zone 4 — Handover</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--z5)"></div>Zone 5 — Ship &amp; Learn</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--zu)"></div>Utility</div>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ── END-TO-END FLOW ── -->
+<div id="flow" class="full-flow">
+  <div class="full-flow-title">End-to-end flow</div>
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="flow-step-node" style="color:var(--zu);border-color:var(--zu);background:rgba(100,116,139,0.1)">⚙</div>
+      <div class="flow-step-label" style="color:var(--muted2)">Bootstrap</div>
+      <div class="flow-step-cmd">/pm-import</div>
+    </div>
+    <div class="flow-line"></div>
+    <div class="flow-step">
+      <div class="flow-step-node" style="color:var(--z1);border-color:var(--z1);background:rgba(107,127,255,0.1)">1</div>
+      <div class="flow-step-label" style="color:var(--z1)">Signal</div>
+      <div class="flow-step-cmd">/pm-signal</div>
+    </div>
+    <div class="flow-line"></div>
+    <div class="flow-step">
+      <div class="flow-step-node" style="color:var(--z1);border-color:var(--z1);background:rgba(107,127,255,0.1)">2</div>
+      <div class="flow-step-label" style="color:var(--z1)">Frame</div>
+      <div class="flow-step-cmd">/pm-frame</div>
+    </div>
+    <div class="flow-line"></div>
+    <div class="flow-step">
+      <div class="flow-step-node" style="color:var(--z1);border-color:var(--z1);background:rgba(107,127,255,0.1)">3</div>
+      <div class="flow-step-label" style="color:var(--z1)">Explore</div>
+      <div class="flow-step-cmd">/pm-explore</div>
+    </div>
+    <div class="flow-line"></div>
+    <div class="flow-step">
+      <div class="flow-step-node" style="color:var(--z1);border-color:var(--z1);background:rgba(107,127,255,0.1)">4</div>
+      <div class="flow-step-label" style="color:var(--z1)">Commit</div>
+      <div class="flow-step-cmd">/pm-commit</div>
+    </div>
+    <div class="flow-line"></div>
+    <div class="flow-step">
+      <div class="flow-step-node" style="color:var(--z2);border-color:var(--z2);background:rgba(167,139,250,0.1)">5</div>
+      <div class="flow-step-label" style="color:var(--z2)">Spec Bundle</div>
+      <div class="flow-step-cmd">/pm-ff</div>
+    </div>
+    <div class="flow-line"></div>
+    <div class="flow-step">
+      <div class="flow-step-node" style="color:var(--z4);border-color:var(--z4);background:rgba(245,158,11,0.1)">6</div>
+      <div class="flow-step-label" style="color:var(--z4)">Handover</div>
+      <div class="flow-step-cmd">/pm-handoff</div>
+    </div>
+    <div class="flow-line"></div>
+    <div class="flow-step">
+      <div class="flow-step-node" style="color:var(--z5);border-color:var(--z5);background:rgba(248,113,113,0.1)">7</div>
+      <div class="flow-step-label" style="color:var(--z5)">Ship</div>
+      <div class="flow-step-cmd">/pm-ship</div>
+    </div>
+    <div class="flow-line"></div>
+    <div class="flow-step">
+      <div class="flow-step-node" style="color:var(--z5);border-color:var(--z5);background:rgba(248,113,113,0.1)">8</div>
+      <div class="flow-step-label" style="color:var(--z5)">Retro</div>
+      <div class="flow-step-cmd">/pm-retro</div>
+    </div>
+    <div class="flow-line" style="background:linear-gradient(to right,var(--border),transparent)"></div>
+    <div class="flow-step">
+      <div class="flow-step-node" style="color:var(--accent3);border-color:var(--accent3);background:rgba(52,211,153,0.1);font-size:16px">↺</div>
+      <div class="flow-step-label" style="color:var(--accent3)">Memory Updated</div>
+      <div class="flow-step-cmd">next feature smarter</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MEMORY BAR ── -->
+<div class="memory-bar">
+  <div class="memory-bar-icon">🧠</div>
+  <div>
+    <div class="memory-bar-label">Persistent Product Memory — auto-loads before every command</div>
+    <div style="font-size:13px;color:var(--muted2)">Created by <code style="font-size:11px;color:var(--accent)">/pm-import</code> · grows via <code style="font-size:11px;color:var(--z5)">/pm-retro</code> · every command reads it first</div>
+  </div>
+  <div class="memory-files">
+    <span class="memory-file">product.md</span>
+    <span class="memory-file">users.md</span>
+    <span class="memory-file">constraints.md</span>
+    <span class="memory-file">history.md</span>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     UTILITY
+══════════════════════════════════════════ -->
+<div id="utility" class="zone zu">
+  <div class="zone-header">
+    <div class="zone-pill">Utility</div>
+    <div class="zone-title">Bootstrap &amp; Setup</div>
+    <div class="zone-subtitle">Run once per product. Unlocks auto-context for every subsequent session.</div>
+  </div>
+  <div class="command-flow">
+
+    <div class="cmd-block">
+      <div class="cmd-card zu">
+        <div class="cmd-name">/pm-import</div>
+        <div class="cmd-tagline">5-question interview — generates your full product context</div>
+        <div class="cmd-section-label">Asks</div>
+        <div class="cmd-items">
+          <div class="cmd-item">What does your product do?</div>
+          <div class="cmd-item">Who are your users (segments + JTBD)?</div>
+          <div class="cmd-item">Positioning — what are you NOT?</div>
+          <div class="cmd-item">What are your constraints?</div>
+          <div class="cmd-item">What has your team already decided?</div>
+        </div>
+        <div class="cmd-output">
+          <div class="cmd-section-label">Creates</div>
+          <span class="output-file">product.md</span>
+          <span class="output-file">users.md</span>
+          <span class="output-file">constraints.md</span>
+          <span class="output-file">history.md</span>
+        </div>
+        <div class="pain-solve">
+          <div class="pain-row"><span class="pain-tag">Pain</span><span>Re-explain your product, users, and constraints to the AI every single session. Every feature starts cold.</span></div>
+          <div class="solve-row"><span class="solve-tag">Solve</span><span>5 questions → 4 persistent files. Every future command loads them automatically. Never start cold again.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <div class="cmd-block">
+      <div class="cmd-card zu">
+        <div class="cmd-name">/pm-attach</div>
+        <div class="cmd-tagline">Load a file into context — image, PDF, spreadsheet, notes</div>
+        <div class="cmd-section-label">Accepts</div>
+        <div class="cmd-items">
+          <div class="cmd-item">Analytics screenshots, CSV exports</div>
+          <div class="cmd-item">User research docs, support exports</div>
+          <div class="cmd-item">Competitor screenshots, design files</div>
+        </div>
+        <div class="cmd-section-label">Does</div>
+        <div class="cmd-items">
+          <div class="cmd-item">Summarizes + surfaces top 2–3 signals</div>
+          <div class="cmd-item">Flags anything that challenges current framing</div>
+          <div class="cmd-item">Asks: fold into exploration or background?</div>
+        </div>
+        <div class="pain-solve">
+          <div class="pain-row"><span class="pain-tag">Pain</span><span>Pasting raw data into a chat without context produces shallow summaries and misses what matters.</span></div>
+          <div class="solve-row"><span class="solve-tag">Solve</span><span>Interprets the artifact through your product context — surfaces the relevant signals, not just a summary.</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     ZONE 1 — MATERIALIZATION
+══════════════════════════════════════════ -->
+<div id="zone1" class="zone z1">
+  <div class="zone-header">
+    <div class="zone-pill">Zone 1</div>
+    <div class="zone-title">Materialization — Raw signal to committed direction</div>
+    <div class="zone-subtitle">Clarity before documentation. One question at a time.</div>
+  </div>
+  <div class="command-flow">
+
+    <!-- pm-signal -->
+    <div class="cmd-block">
+      <div class="cmd-card z1">
+        <div class="cmd-name">/pm-signal</div>
+        <div class="cmd-tagline">Capture a raw signal — begin Socratic dialogue</div>
+        <div class="cmd-section-label">Input — any of</div>
+        <div class="cmd-items">
+          <div class="cmd-item">Customer complaint or support spike</div>
+          <div class="cmd-item">Metric drop or anomaly</div>
+          <div class="cmd-item">Stakeholder idea or exec request</div>
+          <div class="cmd-item">Competitive observation</div>
+          <div class="cmd-item">Team intuition</div>
+        </div>
+        <div class="cmd-section-label">Behaviour</div>
+        <div class="cmd-items">
+          <div class="cmd-item">Reflects signal back (1–2 sentences)</div>
+          <div class="cmd-item">Asks exactly ONE clarifying question</div>
+          <div class="cmd-item">Continues until a clear picture emerges</div>
+        </div>
+        <div class="pain-solve">
+          <div class="pain-row"><span class="pain-tag">Pain</span><span>Describe a complaint to an LLM — it immediately writes a solution. Problem isn't understood yet.</span></div>
+          <div class="solve-row"><span class="solve-tag">Solve</span><span>Reflects back first, then asks one focused question. Separates symptom from root cause before any spec work.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <!-- pm-frame -->
+    <div class="cmd-block">
+      <div class="cmd-card z1">
+        <div class="cmd-name">/pm-frame</div>
+        <div class="cmd-tagline">Generate 2–3 distinct problem framings to react against</div>
+        <div class="cmd-section-label">Each framing includes</div>
+        <div class="cmd-items">
+          <div class="cmd-item">Problem statement</div>
+          <div class="cmd-item">Root hypothesis</div>
+          <div class="cmd-item">Implied direction</div>
+          <div class="cmd-item">Key assumption &amp; what it excludes</div>
+        </div>
+        <div class="cmd-section-label">Rules</div>
+        <div class="cmd-items">
+          <div class="cmd-item">Genuinely distinct — different root causes</div>
+          <div class="cmd-item">At least one challenges the obvious read</div>
+          <div class="cmd-item">Options only — no prescriptions</div>
+        </div>
+        <div class="pain-solve">
+          <div class="pain-row"><span class="pain-tag">Pain</span><span>Stuck in your own framing. LLM validates whatever angle you came in with.</span></div>
+          <div class="solve-row"><span class="solve-tag">Solve</span><span>Forces 2–3 genuinely different root hypotheses. At least one challenges the obvious interpretation.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <!-- pm-explore -->
+    <div class="cmd-block">
+      <div class="cmd-card z1">
+        <div class="cmd-name">/pm-explore</div>
+        <div class="cmd-tagline">Deep-dive the chosen framing across 6 dimensions</div>
+        <div class="cmd-section-label">Covers (one question at a time)</div>
+        <div class="cmd-items">
+          <div class="cmd-item">User specificity — who, frequency</div>
+          <div class="cmd-item">Current behavior — workarounds, cost</div>
+          <div class="cmd-item">Root cause vs. symptom — why, when</div>
+          <div class="cmd-item">Prior attempts — what's been tried</div>
+          <div class="cmd-item">Success criteria — what "fixed" means</div>
+          <div class="cmd-item">Constraints — technical, org, scope</div>
+        </div>
+        <div class="cmd-section-label">After each answer</div>
+        <div class="cmd-items">
+          <div class="cmd-item">Synthesizes: "Here's what I'm hearing..."</div>
+        </div>
+        <div class="pain-solve">
+          <div class="pain-row"><span class="pain-tag">Pain</span><span>LLM gives surface-level answers. Misses who is actually affected, what's been tried, and what the real root cause is.</span></div>
+          <div class="solve-row"><span class="solve-tag">Solve</span><span>Structured 6-dimension exploration, one question at a time, with periodic synthesis to keep the PM aligned.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <!-- pm-commit -->
+    <div class="cmd-block">
+      <div class="cmd-card z1">
+        <div class="cmd-name">/pm-commit</div>
+        <div class="cmd-tagline">Synthesize into a committed, falsifiable direction</div>
+        <div class="cmd-section-label">Generates</div>
+        <div class="cmd-items">
+          <div class="cmd-item">Problem statement (specific, falsifiable)</div>
+          <div class="cmd-item">Solving for: segment + JTBD</div>
+          <div class="cmd-item">NOT solving for: explicit exclusions</div>
+          <div class="cmd-item">Direction: strategic, 2–4 sentences</div>
+          <div class="cmd-item">Key assumptions + top risks</div>
+          <div class="cmd-item">Success: observable + measurable</div>
+          <div class="cmd-item">Out of scope: explicit list</div>
+        </div>
+        <div class="pain-solve">
+          <div class="pain-row"><span class="pain-tag">Pain</span><span>Direction is fuzzy. PM and team have different mental models. Scope creep starts day one.</span></div>
+          <div class="solve-row"><span class="solve-tag">Solve</span><span>Written, falsifiable commitment with explicit out-of-scope. Everyone aligned before a single spec line is written.</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="callout">
+    <span style="flex-shrink:0;margin-top:1px">&#9888;</span>
+    <span><strong>Cross-session note:</strong> Zone 1 dialogue lives in chat context. If you restart a session, re-run <code style="font-size:11px">/pm-signal</code> with a brief summary before proceeding to <code style="font-size:11px">/pm-ff</code>. Persistent commitment file planned for v0.2 (BL-01).</span>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     ZONE 3 — RESEARCH (optional branch)
+══════════════════════════════════════════ -->
+<div id="zone3" class="zone z3">
+  <div class="zone-header">
+    <div class="zone-pill">Zone 3</div>
+    <div class="zone-title">Research — Validate before or alongside spec work</div>
+    <div class="zone-subtitle">Optional. Use before /pm-ff or in parallel with exploration.</div>
+  </div>
+  <div class="command-flow" style="flex-wrap:wrap;gap:12px">
+
+    <div class="cmd-card z3" style="max-width:260px">
+      <div class="cmd-name">/pm-research interview</div>
+      <div class="cmd-tagline">Structured user interview guide</div>
+      <div class="cmd-items">
+        <div class="cmd-item">Screener criteria</div>
+        <div class="cmd-item">Warm-up + core questions (with probes)</div>
+        <div class="cmd-item">Wrap-up prompts</div>
+      </div>
+      <div class="pain-solve">
+        <div class="pain-row"><span class="pain-tag">Pain</span><span>Ad-hoc interview questions miss the real insight. No structure = no comparability across sessions.</span></div>
+        <div class="solve-row"><span class="solve-tag">Solve</span><span>Grounded in your product context and specific user segments — not generic PM templates.</span></div>
+      </div>
+    </div>
+
+    <div class="cmd-card z3" style="max-width:260px">
+      <div class="cmd-name">/pm-research competitive</div>
+      <div class="cmd-tagline">Competitive benchmarking matrix</div>
+      <div class="cmd-items">
+        <div class="cmd-item">Competitors vs. your positioning</div>
+        <div class="cmd-item">Strengths, weaknesses, differentiation</div>
+        <div class="cmd-item">Gaps and opportunity signals</div>
+      </div>
+      <div class="pain-solve">
+        <div class="pain-row"><span class="pain-tag">Pain</span><span>Competitive research is one-off notes that never map back to your product strategy.</span></div>
+        <div class="solve-row"><span class="solve-tag">Solve</span><span>Matrix structured around your positioning — surfaces differentiation gaps, not just feature lists.</span></div>
+      </div>
+    </div>
+
+    <div class="cmd-card z3" style="max-width:260px">
+      <div class="cmd-name">/pm-research prioritize</div>
+      <div class="cmd-tagline">RICE scoring framework</div>
+      <div class="cmd-items">
+        <div class="cmd-item">Reach, Impact, Confidence, Effort</div>
+        <div class="cmd-item">Pre-filled with your feature candidates</div>
+        <div class="cmd-item">Instructions for completing the scores</div>
+      </div>
+      <div class="pain-solve">
+        <div class="pain-row"><span class="pain-tag">Pain</span><span>Prioritization is subjective and HiPPO-driven. No consistent framework across decisions.</span></div>
+        <div class="solve-row"><span class="solve-tag">Solve</span><span>Ready-to-use RICE table with your candidates pre-loaded. Objective scoring baseline in minutes.</span></div>
+      </div>
+    </div>
+
+    <div class="cmd-card z3" style="max-width:260px">
+      <div class="cmd-name">/pm-research survey</div>
+      <div class="cmd-tagline">Validation survey — 7 structured questions</div>
+      <div class="cmd-items">
+        <div class="cmd-item">Survey objective statement</div>
+        <div class="cmd-item">Distribution recommendations</div>
+        <div class="cmd-item">7-question structured survey</div>
+      </div>
+      <div class="pain-solve">
+        <div class="pain-row"><span class="pain-tag">Pain</span><span>Survey questions are generic. Results don't connect back to the specific hypothesis being tested.</span></div>
+        <div class="solve-row"><span class="solve-tag">Solve</span><span>Survey built to validate your specific problem framing — not boilerplate questions.</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     ZONE 2 — PLANNING
+══════════════════════════════════════════ -->
+<div id="zone2" class="zone z2">
+  <div class="zone-header">
+    <div class="zone-pill">Zone 2</div>
+    <div class="zone-title">Planning — Full spec bundle from committed direction</div>
+    <div class="zone-subtitle">One command. Five files. Agent brief is the primary output.</div>
+  </div>
+  <div class="command-flow">
+    <div class="cmd-block">
+      <div class="cmd-card z2 wide">
+        <div class="cmd-name">/pm-ff [feature description]</div>
+        <div class="cmd-tagline">Fast Forward — generates the complete spec bundle in one shot</div>
+        <div class="cmd-section-label">Loads</div>
+        <div class="cmd-items">
+          <div class="cmd-item">prodman-context/ (all four files)</div>
+          <div class="cmd-item">Direction commitment from Zone 1</div>
+        </div>
+        <div class="cmd-section-label">Always writes to features/[feature-name]/</div>
+        <div class="cmd-items">
+          <div class="cmd-item" style="color:var(--z2);font-weight:600">agent-brief.md — primary output, structured for AI agents</div>
+          <div class="cmd-item">brief.md — 1-page PM summary (max 400 words)</div>
+          <div class="cmd-item">prd.md — full requirements P0/P1/P2</div>
+          <div class="cmd-item">approach.md — decision rationale, options considered</div>
+          <div class="cmd-item">plan.md — milestones, work breakdown, risks</div>
+        </div>
+        <div class="cmd-section-label">Then asks inline</div>
+        <div class="cmd-items">
+          <div class="cmd-item">"Generate audience view? engineer / designer / exec / tickets / all / skip"</div>
+        </div>
+        <div class="cmd-output">
+          <div class="cmd-section-label">Writes</div>
+          <span class="output-file" style="font-size:11px">agent-brief.md ★</span>
+          <span class="output-file">brief.md</span>
+          <span class="output-file">prd.md</span>
+          <span class="output-file">approach.md</span>
+          <span class="output-file">plan.md</span>
+        </div>
+        <div class="pain-solve">
+          <div class="pain-row"><span class="pain-tag">Pain</span><span>Writing spec docs is manual, slow, and inconsistent. Different PMs produce different formats. Agents receive a PRD dump and guess at scope, priority, and what NOT to build.</span></div>
+          <div class="solve-row"><span class="solve-tag">Solve</span><span>5-file spec bundle in one shot. Agent brief as the primary output — bounded, testable, explicit. Engineers, designers, and agents all get the right format automatically.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     ZONE 4 — HANDOVER
+══════════════════════════════════════════ -->
+<div id="zone4" class="zone z4">
+  <div class="zone-header">
+    <div class="zone-pill">Zone 4</div>
+    <div class="zone-title">Handover — One spec, five audience-ready views</div>
+    <div class="zone-subtitle">Generated on demand — from /pm-ff inline or separately anytime</div>
+  </div>
+  <div class="handoff-grid">
+
+    <div class="cmd-card z4">
+      <div class="cmd-name">/pm-handoff engineer</div>
+      <div class="cmd-tagline">Engineering kickoff package</div>
+      <div class="cmd-items">
+        <div class="cmd-item">User stories (P0/P1/P2 ordered)</div>
+        <div class="cmd-item">Acceptance criteria per story</div>
+        <div class="cmd-item">Edge cases &amp; error states table</div>
+        <div class="cmd-item">Technical notes, open questions</div>
+        <div class="cmd-item">Definition of done</div>
+      </div>
+      <div class="cmd-output"><span class="output-file">handoff-eng.md</span></div>
+      <div class="pain-solve">
+        <div class="pain-row"><span class="pain-tag">Pain</span><span>Engineers get a PRD and have to derive their own acceptance criteria, edge cases, and DoD.</span></div>
+        <div class="solve-row"><span class="solve-tag">Solve</span><span>All derived for them, grounded in the same spec — kickoff-ready from day one.</span></div>
+      </div>
+    </div>
+
+    <div class="cmd-card z4">
+      <div class="cmd-name">/pm-handoff designer</div>
+      <div class="cmd-tagline">Design brief — user journey focused</div>
+      <div class="cmd-items">
+        <div class="cmd-item">Problem + user segment + context</div>
+        <div class="cmd-item">Jobs to be done</div>
+        <div class="cmd-item">Current → target user journey</div>
+        <div class="cmd-item">Key screens/surfaces, UX constraints</div>
+        <div class="cmd-item">Success criteria for design</div>
+      </div>
+      <div class="cmd-output"><span class="output-file">handoff-design.md</span></div>
+      <div class="pain-solve">
+        <div class="pain-row"><span class="pain-tag">Pain</span><span>Designers get the same PRD as engineers. No JTBD, no journey, no design-specific framing.</span></div>
+        <div class="solve-row"><span class="solve-tag">Solve</span><span>Design brief focused on user journey, JTBD, and current/target state — not implementation detail.</span></div>
+      </div>
+    </div>
+
+    <div class="cmd-card z4">
+      <div class="cmd-name">/pm-handoff stakeholder</div>
+      <div class="cmd-tagline">Exec 1-pager — outcome-first</div>
+      <div class="cmd-items">
+        <div class="cmd-item">What and why (no implementation)</div>
+        <div class="cmd-item">The problem (3 bullets max)</div>
+        <div class="cmd-item">Success looks like (metrics)</div>
+        <div class="cmd-item">Timeline and what we're NOT doing</div>
+        <div class="cmd-item">Risks + decision needed (if any)</div>
+      </div>
+      <div class="cmd-output"><span class="output-file">stakeholder-brief.md</span></div>
+      <div class="pain-solve">
+        <div class="pain-row"><span class="pain-tag">Pain</span><span>Manually rewriting a PRD into an exec 1-pager takes an hour and often buries the outcome.</span></div>
+        <div class="solve-row"><span class="solve-tag">Solve</span><span>Auto-generated outcome-first brief. No implementation detail. Execs see the why, not the what.</span></div>
+      </div>
+    </div>
+
+    <div class="cmd-card z4">
+      <div class="cmd-name">/pm-handoff tickets</div>
+      <div class="cmd-tagline">Linear / Jira ready tickets</div>
+      <div class="cmd-items">
+        <div class="cmd-item">FEAT tickets with SMART criteria</div>
+        <div class="cmd-item">STORY tickets in agile format</div>
+        <div class="cmd-item">Acceptance criteria per ticket</div>
+        <div class="cmd-item">Paste directly into Linear or Jira</div>
+      </div>
+      <div class="cmd-output"><span class="output-file">tickets.md</span></div>
+      <div class="pain-solve">
+        <div class="pain-row"><span class="pain-tag">Pain</span><span>Breaking a PRD into tickets is repetitive, error-prone, and always gets done differently.</span></div>
+        <div class="solve-row"><span class="solve-tag">Solve</span><span>FEAT + STORY tickets derived from the same spec. Paste directly — no reformatting needed.</span></div>
+      </div>
+    </div>
+
+    <div class="cmd-card z4">
+      <div class="cmd-name">/pm-agent-brief</div>
+      <div class="cmd-tagline">Standalone agent brief — for AI coding agents</div>
+      <div class="cmd-section-label">Use when</div>
+      <div class="cmd-items">
+        <div class="cmd-item">You have existing docs from outside ProdMan</div>
+        <div class="cmd-item">Regenerating after handoff-eng updates</div>
+        <div class="cmd-item">Targeting a different agent or scope</div>
+      </div>
+      <div class="cmd-items" style="margin-top:8px">
+        <div class="cmd-item">Task summary, product + tech context</div>
+        <div class="cmd-item">In/out scope, AC, edge cases</div>
+        <div class="cmd-item">Constraints, DoD, escalation triggers</div>
+      </div>
+      <div class="cmd-output"><span class="output-file">agent-brief.md</span></div>
+      <div class="pain-solve">
+        <div class="pain-row"><span class="pain-tag">Pain</span><span>AI agents working from PRDs overengineer, miss scope boundaries, and can't self-verify their output.</span></div>
+        <div class="solve-row"><span class="solve-tag">Solve</span><span>Structured for agent consumption — bounded, testable, with explicit escalation triggers.</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     ZONE 5 — SHIP & LEARN
+══════════════════════════════════════════ -->
+<div id="zone5" class="zone z5">
+  <div class="zone-header">
+    <div class="zone-pill">Zone 5</div>
+    <div class="zone-title">Ship &amp; Learn — Launch coordination and living memory</div>
+    <div class="zone-subtitle">Every retro auto-updates history.md — the next feature starts smarter</div>
+  </div>
+  <div class="command-flow">
+
+    <div class="cmd-block">
+      <div class="cmd-card z5">
+        <div class="cmd-name">/pm-ship</div>
+        <div class="cmd-tagline">Launch coordination package</div>
+        <div class="cmd-section-label">Pre-launch</div>
+        <div class="cmd-items">
+          <div class="cmd-item">Product, Eng, Design, Data sign-offs</div>
+          <div class="cmd-item">Support, Legal checkboxes</div>
+        </div>
+        <div class="cmd-section-label">Launch day</div>
+        <div class="cmd-items">
+          <div class="cmd-item">Flag enabled, monitoring live</div>
+          <div class="cmd-item">Success confirmation, notifications sent</div>
+        </div>
+        <div class="cmd-section-label">Post-launch (48h)</div>
+        <div class="cmd-items">
+          <div class="cmd-item">Error rates, success metrics tracked</div>
+          <div class="cmd-item">Communication plan + rollout phases</div>
+        </div>
+        <div class="pain-solve">
+          <div class="pain-row"><span class="pain-tag">Pain</span><span>Launch coordination is scattered across Slack threads, stale docs, and people's heads. Things get missed.</span></div>
+          <div class="solve-row"><span class="solve-tag">Solve</span><span>Structured pre/during/post checklist grounded in your specific feature — not generic launch theatre.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <div class="cmd-block">
+      <div class="cmd-card z5">
+        <div class="cmd-name">/pm-retro</div>
+        <div class="cmd-tagline">Retrospective + auto-update product memory</div>
+        <div class="cmd-section-label">Step 1 — writes retro.md</div>
+        <div class="cmd-items">
+          <div class="cmd-item">Shipped vs. planned, metrics delta</div>
+          <div class="cmd-item">What worked, what didn't, surprises</div>
+          <div class="cmd-item">Root causes + decisions we'd change</div>
+          <div class="cmd-item">Durable learnings, follow-up actions</div>
+        </div>
+        <div class="cmd-section-label">Step 2 — auto-appends to history.md</div>
+        <div class="cmd-items">
+          <div class="cmd-item">Structured learning block</div>
+          <div class="cmd-item">Loaded automatically by every future command</div>
+        </div>
+        <div class="cmd-output">
+          <span class="output-file">retro.md</span>
+          <span class="output-file" style="color:var(--accent3);background:rgba(52,211,153,0.1);border-color:rgba(52,211,153,0.2)">history.md ↑</span>
+        </div>
+        <div class="pain-solve">
+          <div class="pain-row"><span class="pain-tag">Pain</span><span>Retro learnings go into a doc no one reads again. Next feature starts as cold as the first. Same mistakes repeat.</span></div>
+          <div class="solve-row"><span class="solve-tag">Solve</span><span>Auto-appended to history.md and loaded before every future command. Product memory compounds with every feature.</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="retro-loop">
+    <div class="retro-loop-title">Living memory loop — gets smarter with every feature</div>
+    <div class="retro-loop-row">
+      <span class="retro-loop-node" style="background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);color:var(--z5)">/pm-retro</span>
+      <span class="retro-loop-arrow">→</span>
+      <span class="retro-loop-node" style="background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);color:var(--accent3)">history.md updated</span>
+      <span class="retro-loop-arrow">→</span>
+      <span class="retro-loop-node" style="background:rgba(107,127,255,0.1);border:1px solid rgba(107,127,255,0.2);color:var(--accent)">loaded before next /pm-signal</span>
+      <span class="retro-loop-arrow">→</span>
+      <span class="retro-loop-node" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);color:var(--z2)">next /pm-ff smarter</span>
+      <span class="retro-loop-arrow">→</span>
+      <span class="retro-loop-node" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:var(--accent4)">agents get better context</span>
+      <span class="retro-loop-arrow">↺</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     DIRECT LLM vs PRODMAN
+══════════════════════════════════════════ -->
+<div id="comparison">
+  <div class="section-title">Direct LLM vs ProdMan</div>
+  <div class="section-desc">Same AI. Radically different outcomes. The gap is structure, memory, and what happens before the AI speaks.</div>
+
+  <div class="comparison-wrap">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th style="width:18%">Dimension</th>
+          <th class="th-llm" style="width:41%">Direct LLM</th>
+          <th class="th-pm" style="width:41%">ProdMan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Product context</td>
+          <td class="cell-llm">
+            <div class="verdict-bad">Re-explained every session</div>
+            Cold start every feature. AI has no memory of prior decisions, user segments, or constraints from last week.
+          </td>
+          <td class="cell-pm">
+            <div class="verdict-good">Auto-loaded from prodman-context/</div>
+            product.md, users.md, constraints.md, history.md load before every command. AI knows your product before you type a word.
+          </td>
+        </tr>
+        <tr>
+          <td>Starting point</td>
+          <td class="cell-llm">
+            <div class="verdict-bad">Blank slate every feature</div>
+            Past decisions, retro learnings, ruled-out ideas — all lost. You explain the same context repeatedly.
+          </td>
+          <td class="cell-pm">
+            <div class="verdict-good">Warm start — history of decisions loaded</div>
+            history.md contains what shipped, what failed, and what's been ruled out. Context compounds across features.
+          </td>
+        </tr>
+        <tr>
+          <td>Problem framing</td>
+          <td class="cell-llm">
+            <div class="verdict-bad">Validates your framing</div>
+            LLM works with whatever angle you bring. Rarely challenges the underlying assumption. One frame, one path.
+          </td>
+          <td class="cell-pm">
+            <div class="verdict-good">Generates alternatives, challenges assumptions</div>
+            /pm-frame produces 2–3 distinct root hypotheses. At least one challenges the obvious interpretation.
+          </td>
+        </tr>
+        <tr>
+          <td>Dialogue style</td>
+          <td class="cell-llm">
+            <div class="verdict-bad">Answers immediately</div>
+            Describe a problem, get a spec. No validation that the problem was understood correctly.
+          </td>
+          <td class="cell-pm">
+            <div class="verdict-good">Questions before prescribing</div>
+            One focused question at a time. Socratic dialogue until the picture is clear. Symptoms separated from causes.
+          </td>
+        </tr>
+        <tr>
+          <td>Spec quality</td>
+          <td class="cell-llm">
+            <div class="verdict-bad">Writes what you ask</div>
+            No consistency. Format varies by session. Scope is whatever the PM implies, not what's explicit.
+          </td>
+          <td class="cell-pm">
+            <div class="verdict-good">Structured, bounded, consistent</div>
+            5-file bundle with explicit in/out scope, P0/P1/P2 prioritization, AC, edge cases — every time.
+          </td>
+        </tr>
+        <tr>
+          <td>Agent handoff</td>
+          <td class="cell-llm">
+            <div class="verdict-bad">PRD dump — agent guesses at scope</div>
+            Agent interprets intent. Overengineers, expands scope, and can't self-verify output against criteria it doesn't have.
+          </td>
+          <td class="cell-pm">
+            <div class="verdict-good">Structured agent brief — bounded and testable</div>
+            Explicit in/out scope, testable AC, "must NOT do" list, escalation triggers. Agent knows exactly when it's done.
+          </td>
+        </tr>
+        <tr>
+          <td>Audience output</td>
+          <td class="cell-llm">
+            <div class="verdict-bad">One format — manual reformatting</div>
+            Engineers, designers, and execs all get the same doc. PM manually rewrites for each audience.
+          </td>
+          <td class="cell-pm">
+            <div class="verdict-good">5 audience-ready views from one source</div>
+            engineer, designer, stakeholder, tickets, agent-brief — each formatted for what that audience actually needs.
+          </td>
+        </tr>
+        <tr>
+          <td>Team memory</td>
+          <td class="cell-llm">
+            <div class="verdict-bad">Dies when the tab closes</div>
+            No continuity. Every team member re-explains context. New PMs and agents start from zero.
+          </td>
+          <td class="cell-pm">
+            <div class="verdict-good">Grows with every retro</div>
+            /pm-retro auto-appends to history.md. New sessions, new team members, new agents — all start warm.
+          </td>
+        </tr>
+        <tr>
+          <td>Learning loop</td>
+          <td class="cell-llm">
+            <div class="verdict-bad">None</div>
+            What shipped, what failed, what changed — never captured systematically. Repeat mistakes next quarter.
+          </td>
+          <td class="cell-pm">
+            <div class="verdict-good">Automatic — retro feeds next feature</div>
+            Durable learnings written to history.md. Every future /pm-ff and /pm-signal has access to what you learned.
+          </td>
+        </tr>
+        <tr>
+          <td>Scope governance</td>
+          <td class="cell-llm">
+            <div class="verdict-bad">Agent interprets intent</div>
+            "Build order history" could mean anything. Agent adds related features, edge cases you didn't ask for, API changes.
+          </td>
+          <td class="cell-pm">
+            <div class="verdict-good">Explicit in/out scope + must NOT list</div>
+            Out-of-scope is written. What the agent must NOT do is stated. No guessing, no scope drift.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     AGENTIC BENEFITS
+══════════════════════════════════════════ -->
+<div id="agentic">
+  <div class="section-title">Agentic Benefits</div>
+  <div class="section-desc">ProdMan is built agent-first. The primary output of /pm-ff is not a human archive — it's a structured context package for an AI agent about to build. Here's why that matters.</div>
+
+  <div class="agentic-grid">
+
+    <div class="agentic-card">
+      <div class="agentic-number">Principle 01</div>
+      <div class="agentic-title">Bounded Scope</div>
+      <div class="agentic-desc">Agent knows exactly where to start, where to stop, and what is explicitly out of scope. No interpretation required.</div>
+      <div class="agentic-without">Agent receives a PRD, expands scope, adds features it thinks are related, and ships something 40% larger than planned.</div>
+      <div class="agentic-with">In-scope list, out-of-scope list, and a "must NOT do" section. Agent respects the boundaries because they're explicit.</div>
+    </div>
+
+    <div class="agentic-card">
+      <div class="agentic-number">Principle 02</div>
+      <div class="agentic-title">Testable Acceptance Criteria</div>
+      <div class="agentic-desc">Every requirement has observable, verifiable criteria. The agent can check its own output against the spec before it delivers.</div>
+      <div class="agentic-without">AC says "users should be able to find their orders easily." Agent can't verify what "easily" means. Ships and hopes.</div>
+      <div class="agentic-with">AC says "Order history loads in under 1s for the last 90 days. Filter by status returns correct results." Agent can test it.</div>
+    </div>
+
+    <div class="agentic-card">
+      <div class="agentic-number">Principle 03</div>
+      <div class="agentic-title">Embedded Product Context</div>
+      <div class="agentic-desc">Agent understands the why — what the product is, who uses it, and what decisions have already been made — without being told.</div>
+      <div class="agentic-without">Agent implements a feature without knowing the user segment, prior API constraints, or that a similar approach was ruled out last quarter.</div>
+      <div class="agentic-with">product.md, users.md, constraints.md, and history.md embedded in the brief. Agent builds for the right user with the right constraints.</div>
+    </div>
+
+    <div class="agentic-card">
+      <div class="agentic-number">Principle 04</div>
+      <div class="agentic-title">Explicit "Must NOT Do"</div>
+      <div class="agentic-desc">Overengineering and scope creep happen when agents fill gaps with assumptions. An explicit stop list prevents this.</div>
+      <div class="agentic-without">Agent adds authentication changes, database migrations, and admin UI "because they seem related." Sprint blows up.</div>
+      <div class="agentic-with">must NOT: modify the auth system, touch user schema, or add new API endpoints beyond those listed. Agent stays in lane.</div>
+    </div>
+
+    <div class="agentic-card">
+      <div class="agentic-number">Principle 05</div>
+      <div class="agentic-title">Clear Escalation Triggers</div>
+      <div class="agentic-desc">Agent knows exactly when to stop and ask vs. when to proceed. Prevents silent failure and unauthorized decisions.</div>
+      <div class="agentic-without">Agent hits an ambiguity, makes a decision, and ships. PM finds out three days later that the wrong path was taken.</div>
+      <div class="agentic-with">"Stop and ask if: the data model requires a new table, an edge case isn't covered by AC, or the approach differs from approach.md."</div>
+    </div>
+
+    <div class="agentic-card">
+      <div class="agentic-number">Principle 06</div>
+      <div class="agentic-title">Reproducible Context Package</div>
+      <div class="agentic-desc">Any agent — new session, different model, mid-feature handoff — can pick up the same brief and continue without losing context.</div>
+      <div class="agentic-without">Context lives in a long chat thread. New session or new agent means starting over or pasting walls of text to catch up.</div>
+      <div class="agentic-with">features/[name]/agent-brief.md is a self-contained context package. Any agent, any session, any model — consistent output.</div>
+    </div>
+
+  </div>
+
+  <!-- Agent brief anatomy -->
+  <div class="brief-anatomy">
+    <div class="brief-anatomy-title">Agent brief anatomy — what each field does for the agent</div>
+    <div class="anatomy-grid">
+      <div class="anatomy-item">
+        <div class="anatomy-field">task_summary</div>
+        <div class="anatomy-why">1–3 sentence orientation. Agent knows the job before reading anything else.</div>
+      </div>
+      <div class="anatomy-item">
+        <div class="anatomy-field">product_context</div>
+        <div class="anatomy-why">What the product does, who uses it. Agent builds for the right user.</div>
+      </div>
+      <div class="anatomy-item">
+        <div class="anatomy-field">technical_context</div>
+        <div class="anatomy-why">Stack, patterns, constraints. Agent doesn't contradict your architecture.</div>
+      </div>
+      <div class="anatomy-item">
+        <div class="anatomy-field">in_scope / out_of_scope</div>
+        <div class="anatomy-why">Hard boundaries. Agent knows exactly what to build and what to leave alone.</div>
+      </div>
+      <div class="anatomy-item">
+        <div class="anatomy-field">must_not_do</div>
+        <div class="anatomy-why">Explicit stop list. Prevents overengineering and unauthorized scope expansion.</div>
+      </div>
+      <div class="anatomy-item">
+        <div class="anatomy-field">acceptance_criteria</div>
+        <div class="anatomy-why">Observable, verifiable conditions. Agent self-checks before delivering.</div>
+      </div>
+      <div class="anatomy-item">
+        <div class="anatomy-field">edge_cases</div>
+        <div class="anatomy-why">Pre-enumerated. Agent handles them consistently, not by guessing.</div>
+      </div>
+      <div class="anatomy-item">
+        <div class="anatomy-field">constraints</div>
+        <div class="anatomy-why">Style, performance, accessibility, security. Non-negotiable requirements.</div>
+      </div>
+      <div class="anatomy-item">
+        <div class="anatomy-field">definition_of_done</div>
+        <div class="anatomy-why">Clear completion signal. Agent knows when to stop, not just when to ship.</div>
+      </div>
+      <div class="anatomy-item">
+        <div class="anatomy-field">escalation_triggers</div>
+        <div class="anatomy-why">Explicit "stop and ask" conditions. No silent failures or unauthorized decisions.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════════
+     OUTPUT MAP
+══════════════════════════════════════════ -->
+<div id="outputs">
+  <div class="section-title">Complete output file map</div>
+  <div class="section-desc">Every file ProdMan generates, where it lives, and who it's for.</div>
+
+  <div class="output-map-grid">
+
+    <div class="output-map-card">
+      <div class="output-map-label">prodman-context/ — persistent memory</div>
+      <div class="output-map-row">
+        <span style="font-family:monospace;font-size:11px;color:var(--accent)">product.md</span>
+        <span style="font-size:10px;color:var(--muted)">What you build</span>
+      </div>
+      <div class="output-map-row">
+        <span style="font-family:monospace;font-size:11px;color:var(--accent)">users.md</span>
+        <span style="font-size:10px;color:var(--muted)">User segments + JTBD</span>
+      </div>
+      <div class="output-map-row">
+        <span style="font-family:monospace;font-size:11px;color:var(--accent)">constraints.md</span>
+        <span style="font-size:10px;color:var(--muted)">Tech, legal, org limits</span>
+      </div>
+      <div class="output-map-row">
+        <span style="font-family:monospace;font-size:11px;color:var(--accent)">history.md</span>
+        <span style="font-size:10px;color:var(--muted)">Decisions + retro learnings</span>
+      </div>
+    </div>
+
+    <div class="output-map-card">
+      <div class="output-map-label">features/[name]/ — spec bundle</div>
+      <div class="output-map-row">
+        <span style="font-family:monospace;font-size:11px;color:var(--z2)">agent-brief.md ★</span>
+        <span style="font-size:10px;color:var(--muted)">AI coding agents</span>
+      </div>
+      <div class="output-map-row">
+        <span style="font-family:monospace;font-size:11px;color:var(--z2)">brief.md</span>
+        <span style="font-size:10px;color:var(--muted)">PM 1-pager</span>
+      </div>
+      <div class="output-map-row">
+        <span style="font-family:monospace;font-size:11px;color:var(--z2)">prd.md</span>
+        <span style="font-size:10px;color:var(--muted)">Full requirements</span>
+      </div>
+      <div class="output-map-row">
+        <span style="font-family:monospace;font-size:11px;color:var(--z2)">approach.md</span>
+        <span style="font-size:10px;color:var(--muted)">Decision rationale</span>
+      </div>
+      <div class="output-map-row">
+        <span style="font-family:monospace;font-size:11px;color:var(--z2)">plan.md</span>
+        <span style="font-size:10px;color:var(--muted)">Milestones + execution</span>
+      </div>
+    </div>
+
+    <div class="output-map-card">
+      <div class="output-map-label">features/[name]/ — handoff views</div>
+      <div class="output-map-row">
+        <span style="font-family:monospace;font-size:11px;color:var(--z4)">handoff-eng.md</span>
+        <span style="font-size:10px;color:var(--muted)">Engineers</span>
+      </div>
+      <div class="output-map-row">
+        <span style="font-family:monospace;font-size:11px;color:var(--z4)">handoff-design.md</span>
+        <span style="font-size:10px;color:var(--muted)">Designers</span>
+      </div>
+      <div class="output-map-row">
+        <span style="font-family:monospace;font-size:11px;color:var(--z4)">stakeholder-brief.md</span>
+        <span style="font-size:10px;color:var(--muted)">Leadership / execs</span>
+      </div>
+      <div class="output-map-row">
+        <span style="font-family:monospace;font-size:11px;color:var(--z4)">tickets.md</span>
+        <span style="font-size:10px;color:var(--muted)">Linear / Jira</span>
+      </div>
+    </div>
+
+    <div class="output-map-card">
+      <div class="output-map-label">features/[name]/ — ship &amp; learn</div>
+      <div class="output-map-row">
+        <span style="font-family:monospace;font-size:11px;color:var(--z5)">retro.md</span>
+        <span style="font-size:10px;color:var(--muted)">Full retrospective</span>
+      </div>
+      <div style="height:1px;background:var(--border);margin:8px 0"></div>
+      <div class="output-map-row">
+        <span style="font-family:monospace;font-size:11px;color:var(--accent3)">history.md ↑</span>
+        <span style="font-size:10px;color:var(--muted)">Auto-appended by /pm-retro</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span>ProdMan v0.1 — AI-native PM framework</span>
+  <span>MIT License · <a href="https://github.com/VisNavyVet/PRODMAN" target="_blank">github.com/VisNavyVet/PRODMAN</a></span>
+</footer>
+
+</body>
+</html>
