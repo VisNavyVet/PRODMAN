@@ -4,7 +4,8 @@
 [![AI Agnostic](https://img.shields.io/badge/AI-Agnostic-green)](integrations/universal.md)
 [![Works with Claude Code](https://img.shields.io/badge/Works%20with-Claude%20Code-blue)](https://claude.ai/code)
 [![Works with Cursor](https://img.shields.io/badge/Works%20with-Cursor-black)](https://cursor.sh)
-[![Version](https://img.shields.io/badge/version-0.1-brightgreen)]()
+[![Version](https://img.shields.io/badge/version-0.1.0-brightgreen)]()
+[![npm @prodman/cli](https://img.shields.io/badge/npm-%40prodman%2Fcli-red)](https://www.npmjs.com/package/@prodman/cli)
 
 **An open-source PM framework for teams building with AI agents.**
 Structured thinking. Persistent product memory. Agent-ready output — from signal to ship.
@@ -88,6 +89,65 @@ prodman-context/
 ProdMan won't write a spec. It'll ask you one question first.
 
 **In any other AI tool:** Open `prodman/commands/pm-signal.md`, paste it into your chat, then add your signal.
+
+---
+
+## CLI — Validate and Compile Specs
+
+ProdMan ships a CLI (`@prodman/cli`) that validates specs against 11 lint rules and compiles them to machine-readable JSON contracts. Use it locally or in CI.
+
+```bash
+npm install -g @prodman/cli
+```
+
+**Validate a spec (shows readiness + all issues):**
+
+```bash
+prodman validate checkout-v2
+# ✗ [LNT-011] Missing escalation triggers — agent will make unauthorized decisions
+# ⚠ [LNT-009] Vague AC: "works correctly"
+# Status: ✗ Incomplete (1 error, 1 warning)
+
+# After fixing:
+prodman validate checkout-v2
+# ✓ Agent Ready
+```
+
+**Validate all features:**
+
+```bash
+prodman validate --all
+```
+
+**Compile to machine-readable spec.json:**
+
+```bash
+prodman compile checkout-v2
+# → features/checkout-v2/compiled-spec.json (v1)
+```
+
+**See all features and their status:**
+
+```bash
+prodman status
+# Feature               Zone  Files  Readiness       Last Updated
+# checkout-v2           2     5/6    ✓ Agent Ready   1 day ago
+# notification-center   1     1/6    ✗ Incomplete    14 days ago
+```
+
+**Add to CI — block merges on incomplete specs:**
+
+```yaml
+# .github/workflows/spec-check.yml
+- uses: prodman/prodman-validate@v1
+  with:
+    fail-on: incomplete          # or: review-needed
+    features-dir: features       # default
+```
+
+Output: readiness badge in CI. Exit 1 on threshold breach.
+
+The core library (`@prodman/core`) is zero-dependency and importable directly — used by the VS Code extension and GitHub Action.
 
 ---
 
@@ -258,7 +318,8 @@ features/[feature-name]/      ← generated per feature
 |---|---|---|
 | v0 | Core commands, templates, schemas, integration guides | ✓ Done |
 | v0.1 | Living memory, agent-first output, ticket export, audience lenses, cross-session continuity | ✓ Done |
-| v0.2 | VS Code extension — ambient context, auto-inject tech context, retro triggers | Planned |
+| **v0.1.0 (Drop 1)** | **`@prodman/core` + `@prodman/cli` + GitHub Action + 11 lint rules + spec compiler** | **✓ Done** |
+| v0.2 (Drop 2) | VS Code extension — ambient linting, context health panel, signal inbox, pipeline dashboard | Planned |
 | v0.3 | MCP integration — zero-friction agent handoff from Claude Code | Planned |
 | v0.4 | Live integrations — Linear/Jira push, team context sharing | Planned |
 
