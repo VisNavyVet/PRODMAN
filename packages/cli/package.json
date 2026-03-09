@@ -1,0 +1,37 @@
+{
+  "name": "@prodman/cli",
+  "version": "0.1.0",
+  "description": "CLI for validating and compiling ProdMan product specs",
+  "main": "dist/index.js",
+  "bin": {
+    "prodman": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rimraf dist",
+    "start": "node dist/index.js",
+    "test": "echo \"No CLI tests yet\" && exit 0"
+  },
+  "keywords": [
+    "prodman",
+    "cli",
+    "spec",
+    "linter",
+    "product-management"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@prodman/core": "^0.1.0",
+    "chalk": "^4.1.2",
+    "commander": "^12.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "@types/node": "^20.0.0",
+    "rimraf": "^5.0.0"
+  }
+}

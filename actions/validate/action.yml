@@ -1,0 +1,110 @@
+name: 'ProdMan Spec Validator'
+description: 'Validates ProdMan spec bundles and fails CI on incomplete specs. Ensures no agent receives a bad brief.'
+author: 'ProdMan'
+
+branding:
+  icon: 'check-circle'
+  color: 'blue'
+
+inputs:
+  feature:
+    description: 'Feature name to validate (matches folder under features/). Omit to validate all features.'
+    required: false
+    default: ''
+  fail-on:
+    description: |
+      When to fail CI:
+        incomplete    — fail only if spec is missing required sections (default)
+        review-needed — fail if any warnings exist
+    required: false
+    default: 'incomplete'
+  features-dir:
+    description: 'Path to the features directory relative to the workspace root.'
+    required: false
+    default: 'features'
+  working-directory:
+    description: 'Working directory (repo root). Defaults to github.workspace.'
+    required: false
+    default: '.'
+
+outputs:
+  readiness:
+    description: 'Overall readiness state: agent-ready | review-needed | incomplete'
+    value: ${{ steps.validate.outputs.readiness }}
+  feature-count:
+    description: 'Number of features validated'
+    value: ${{ steps.validate.outputs.feature-count }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install ProdMan CLI
+      shell: bash
+      run: npm install -g @prodman/cli@latest
+
+    - name: Validate specs
+      id: validate
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        set +e
+
+        if [ -n "${{ inputs.feature }}" ]; then
+          OUTPUT=$(prodman validate "${{ inputs.feature }}" \
+            --features-path "${{ inputs.features-dir }}" \
+            --json 2>&1)
+          EXIT_CODE=$?
+        else
+          OUTPUT=$(prodman validate --all \
+            --features-path "${{ inputs.features-dir }}" \
+            --json 2>&1)
+          EXIT_CODE=$?
+        fi
+
+        echo "$OUTPUT"
+
+        # Parse readiness from JSON output
+        READINESS=$(echo "$OUTPUT" | node -e "
+          const chunks = [];
+          process.stdin.on('data', d => chunks.push(d));
+          process.stdin.on('end', () => {
+            try {
+              const data = JSON.parse(chunks.join(''));
+              // Single feature: array of LintResult
+              if (Array.isArray(data)) {
+                const hasError = data.some(r => r.readiness === 'incomplete');
+                const hasWarn = data.some(r => r.readiness === 'review-needed');
+                console.log(hasError ? 'incomplete' : hasWarn ? 'review-needed' : 'agent-ready');
+              }
+              // All features: object of feature -> LintResult[]
+              else {
+                const results = Object.values(data).flat();
+                const hasError = results.some(r => r.readiness === 'incomplete');
+                const hasWarn = results.some(r => r.readiness === 'review-needed');
+                console.log(hasError ? 'incomplete' : hasWarn ? 'review-needed' : 'agent-ready');
+              }
+            } catch { console.log('unknown'); }
+          });
+        " 2>/dev/null || echo "unknown")
+
+        echo "readiness=$READINESS" >> "$GITHUB_OUTPUT"
+
+        # Determine if we should fail
+        FAIL_ON="${{ inputs.fail-on }}"
+        SHOULD_FAIL=false
+
+        if [ "$FAIL_ON" = "incomplete" ] && [ "$READINESS" = "incomplete" ]; then
+          SHOULD_FAIL=true
+        fi
+        if [ "$FAIL_ON" = "review-needed" ] && [ "$READINESS" != "agent-ready" ]; then
+          SHOULD_FAIL=true
+        fi
+
+        if [ "$SHOULD_FAIL" = "true" ]; then
+          echo ""
+          echo "::error::ProdMan spec validation failed. Readiness: $READINESS"
+          echo "Fix the issues above before merging."
+          exit 1
+        fi
+
+        exit 0
