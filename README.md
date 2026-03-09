@@ -32,7 +32,7 @@ ProdMan connects it.
 
 ## How It Works
 
-ProdMan is **12 command prompts and a context system**. Commands are plain Markdown — native slash commands in Claude Code, or paste them into any AI tool.
+ProdMan is two things working together: **12 AI command prompts** for the PM workflow, and a **CLI + compiler** that validates specs and turns them into machine-readable contracts.
 
 ```
 /pm-import          ← Run once. Generates your persistent product memory.
@@ -43,6 +43,9 @@ ProdMan is **12 command prompts and a context system**. Commands are plain Markd
 /pm-commit          ← Lock direction. Writes commitment.md to disk.
      ↓
 /pm-ff              ← Full spec bundle in one shot. Agent brief is primary output.
+     ↓
+prodman validate    ← 11 lint rules catch vague AC, missing escalation triggers, etc.
+prodman compile     ← Compiles agent-brief.md → compiled-spec.json (machine-readable)
      ↓
 /pm-handoff         ← engineer / designer / exec / tickets — each gets their view.
      ↓
@@ -139,15 +142,23 @@ prodman status
 
 ```yaml
 # .github/workflows/spec-check.yml
-- uses: prodman/prodman-validate@v1
+- uses: VisNavyVet/PRODMAN/actions/validate@v0.1.0
   with:
     fail-on: incomplete          # or: review-needed
     features-dir: features       # default
 ```
 
-Output: readiness badge in CI. Exit 1 on threshold breach.
+Output: `readiness` output variable (`agent-ready` | `review-needed` | `incomplete`). Exit 1 on threshold breach. Prints full diagnostics in CI log.
 
-The core library (`@prodman/core`) is zero-dependency and importable directly — used by the VS Code extension and GitHub Action.
+The core library (`@prodman/core`) is zero-dependency and importable directly in any Node.js project:
+
+```typescript
+import { Linter, Compiler } from '@prodman/core'
+
+const linter = new Linter()
+const result = linter.lintFile('features/checkout-v2/agent-brief.md')
+console.log(result.readiness) // 'agent-ready' | 'review-needed' | 'incomplete'
+```
 
 ---
 
@@ -209,12 +220,15 @@ product_context       ← Who it's for and why. Agent builds for the right user.
 technical_context     ← Stack, patterns, constraints. Agent doesn't contradict your architecture.
 in_scope              ← Hard list. Build exactly this.
 out_of_scope          ← Hard list. Touch none of this.
-must_not_do           ← Explicit stop list. Prevents scope creep.
+anti_requirements     ← Explicit stop list. Prevents scope creep and overengineering.
 acceptance_criteria   ← Observable, verifiable. Agent self-checks before delivering.
-edge_cases            ← Pre-enumerated. Handled consistently, not by guessing.
+edge_cases            ← Pre-enumerated. Agent handles them consistently, not by guessing.
+constraints           ← Style, perf, accessibility, security. Non-negotiable requirements.
 definition_of_done    ← Agent knows when to stop, not just when to ship.
-escalation_triggers   ← Stop and ask if: [explicit conditions]. No unauthorized decisions.
+escalation_triggers   ← Stop and ask if: [explicit conditions]. No silent failures.
 ```
+
+These 11 fields map directly to `compiled-spec.json` — the machine-readable contract produced by `prodman compile`. See [`specs/prodman-spec-v1.md`](specs/prodman-spec-v1.md) for the full spec standard and [`schemas/compiled-spec-schema.json`](schemas/compiled-spec-schema.json) for the JSON schema.
 
 ---
 
@@ -279,10 +293,10 @@ escalation_triggers   ← Stop and ask if: [explicit conditions]. No unauthorize
 
 ```
 prodman-context/              ← persistent memory, loads before every command
-├── product.md
-├── users.md
-├── constraints.md
-└── history.md                ← auto-grows via /pm-retro
+├── product.md                ← what your product is
+├── users.md                  ← user segments and personas
+├── constraints.md            ← tech, legal, org constraints
+└── history.md                ← decisions + retro learnings — auto-grows via /pm-retro
 
 features/[feature-name]/      ← generated per feature
 ├── commitment.md             ← direction lock (written by /pm-commit)
@@ -291,6 +305,7 @@ features/[feature-name]/      ← generated per feature
 ├── prd.md                    ← full requirements (P0/P1/P2)
 ├── approach.md               ← decision rationale, options considered
 ├── plan.md                   ← milestones, work breakdown, risks
+├── compiled-spec.json ◆      ← machine-readable contract (written by prodman compile)
 ├── handoff-eng.md            ← engineering kickoff package
 ├── handoff-design.md         ← design brief
 ├── stakeholder-brief.md      ← exec 1-pager

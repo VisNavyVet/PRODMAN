@@ -694,6 +694,7 @@
   <a href="#zone4">Handover</a>
   <a href="#zone5">Ship</a>
   <span class="nav-sep">|</span>
+  <a href="#cli">CLI &amp; CI</a>
   <a href="#comparison">LLM vs ProdMan</a>
   <a href="#agentic">Agentic Benefits</a>
   <a href="#outputs">Output Map</a>
@@ -709,6 +710,7 @@
       <span class="badge badge-green">5 Zones</span>
       <span class="badge badge-purple">AI Agnostic</span>
       <span class="badge badge-amber">Agent-First Output</span>
+      <span class="badge badge-green">@prodman/cli on npm</span>
     </div>
   </div>
   <div class="legend">
@@ -761,6 +763,12 @@
       <div class="flow-step-node" style="color:var(--z2);border-color:var(--z2);background:rgba(167,139,250,0.1)">5</div>
       <div class="flow-step-label" style="color:var(--z2)">Spec Bundle</div>
       <div class="flow-step-cmd">/pm-ff</div>
+    </div>
+    <div class="flow-line"></div>
+    <div class="flow-step">
+      <div class="flow-step-node" style="color:var(--accent3);border-color:var(--accent3);background:rgba(52,211,153,0.1)">✓</div>
+      <div class="flow-step-label" style="color:var(--accent3)">Validate</div>
+      <div class="flow-step-cmd">prodman validate</div>
     </div>
     <div class="flow-line"></div>
     <div class="flow-step">
@@ -991,8 +999,8 @@
   </div>
 
   <div class="callout">
-    <span style="flex-shrink:0;margin-top:1px">&#9888;</span>
-    <span><strong>Cross-session note:</strong> Zone 1 dialogue lives in chat context. If you restart a session, re-run <code style="font-size:11px">/pm-signal</code> with a brief summary before proceeding to <code style="font-size:11px">/pm-ff</code>. Persistent commitment file planned for v0.2 (BL-01).</span>
+    <span style="flex-shrink:0;margin-top:1px">&#9432;</span>
+    <span><strong>Cross-session continuity:</strong> Zone 1 dialogue lives in chat context. When you run <code style="font-size:11px">/pm-commit</code>, ProdMan writes <code style="font-size:11px">features/[name]/commitment.md</code> to disk — so <code style="font-size:11px">/pm-ff</code> picks it up in any future session automatically.</span>
   </div>
 </div>
 
@@ -1312,6 +1320,113 @@
 <div class="section-divider"></div>
 
 <!-- ══════════════════════════════════════════
+     CLI & CI
+══════════════════════════════════════════ -->
+<div id="cli">
+  <div class="section-title">CLI &amp; CI — Validate Before Any Agent Sees the Spec</div>
+  <div class="section-desc">The <code>@prodman/cli</code> validates your <code>agent-brief.md</code> against 11 lint rules and compiles it to a machine-readable JSON contract. Use it locally or as a CI gate.</div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:24px">
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px">
+      <div style="font-size:12px;font-weight:600;color:var(--muted2);margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em">Install</div>
+      <code style="display:block;background:var(--surface2);border-radius:6px;padding:12px;font-size:12px;color:var(--accent3)">npm install -g @prodman/cli</code>
+      <div style="font-size:12px;color:var(--muted2);margin-top:10px">Zero config. Works in any project with a <code style="font-size:11px">features/</code> folder.</div>
+    </div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px">
+      <div style="font-size:12px;font-weight:600;color:var(--muted2);margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em">Validate</div>
+      <code style="display:block;background:var(--surface2);border-radius:6px;padding:12px;font-size:12px;color:var(--text);line-height:1.7">prodman validate checkout-v2</code>
+      <div style="margin-top:10px;font-size:11px;color:var(--accent5);font-family:monospace;line-height:1.7">✗ [LNT-011] No escalation triggers<br>⚠ [LNT-009] Vague AC: "works correctly"<br><span style="color:var(--muted)">Status: ✗ Incomplete</span></div>
+    </div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px">
+      <div style="font-size:12px;font-weight:600;color:var(--muted2);margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em">Compile to JSON</div>
+      <code style="display:block;background:var(--surface2);border-radius:6px;padding:12px;font-size:12px;color:var(--text);line-height:1.7">prodman compile checkout-v2</code>
+      <div style="margin-top:10px;font-size:11px;color:var(--accent3);font-family:monospace">✓ compiled-spec.json (v1)</div>
+      <div style="font-size:12px;color:var(--muted2);margin-top:6px">Blocked on Incomplete. Versioned on each run.</div>
+    </div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px">
+      <div style="font-size:12px;font-weight:600;color:var(--muted2);margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em">CI Gate</div>
+      <code style="display:block;background:var(--surface2);border-radius:6px;padding:12px;font-size:11px;color:var(--text);line-height:1.7">- uses: VisNavyVet/PRODMAN/<br>&nbsp;&nbsp;actions/validate@v0.1.0<br>&nbsp;&nbsp;with:<br>&nbsp;&nbsp;&nbsp;&nbsp;fail-on: incomplete</code>
+      <div style="font-size:12px;color:var(--muted2);margin-top:6px">Blocks merges. <code style="font-size:11px">fail-on: review-needed</code> for stricter gates.</div>
+    </div>
+
+  </div>
+
+  <!-- 11 Rules -->
+  <div style="margin-top:32px">
+    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:16px">11 lint rules — what gets checked on every <code style="font-size:12px">agent-brief.md</code></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:8px">
+      <div style="display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
+        <span style="font-family:monospace;font-size:10px;color:var(--accent5);background:rgba(248,113,113,0.1);border-radius:4px;padding:2px 6px;white-space:nowrap;flex-shrink:0">LNT-001 error</span>
+        <span style="font-size:12px;color:var(--muted2)">All required sections present and non-empty</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
+        <span style="font-family:monospace;font-size:10px;color:var(--accent5);background:rgba(248,113,113,0.1);border-radius:4px;padding:2px 6px;white-space:nowrap;flex-shrink:0">LNT-002 error</span>
+        <span style="font-size:12px;color:var(--muted2)">Task Summary 10–500 characters</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
+        <span style="font-family:monospace;font-size:10px;color:var(--accent5);background:rgba(248,113,113,0.1);border-radius:4px;padding:2px 6px;white-space:nowrap;flex-shrink:0">LNT-003 error</span>
+        <span style="font-size:12px;color:var(--muted2)">Technical Context lists ≥ 1 relevant file</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
+        <span style="font-family:monospace;font-size:10px;color:var(--accent5);background:rgba(248,113,113,0.1);border-radius:4px;padding:2px 6px;white-space:nowrap;flex-shrink:0">LNT-004 error</span>
+        <span style="font-size:12px;color:var(--muted2)">In Scope ≥ 1 item</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
+        <span style="font-family:monospace;font-size:10px;color:var(--accent5);background:rgba(248,113,113,0.1);border-radius:4px;padding:2px 6px;white-space:nowrap;flex-shrink:0">LNT-005 error</span>
+        <span style="font-size:12px;color:var(--muted2)">Out of Scope ≥ 1 item</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
+        <span style="font-family:monospace;font-size:10px;color:var(--accent5);background:rgba(248,113,113,0.1);border-radius:4px;padding:2px 6px;white-space:nowrap;flex-shrink:0">LNT-006 error</span>
+        <span style="font-size:12px;color:var(--muted2)">Requirements ≥ 1 item</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
+        <span style="font-family:monospace;font-size:10px;color:var(--accent5);background:rgba(248,113,113,0.1);border-radius:4px;padding:2px 6px;white-space:nowrap;flex-shrink:0">LNT-007 error</span>
+        <span style="font-size:12px;color:var(--muted2)">Anti-Requirements (Must NOT do) ≥ 1 item</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
+        <span style="font-family:monospace;font-size:10px;color:var(--accent5);background:rgba(248,113,113,0.1);border-radius:4px;padding:2px 6px;white-space:nowrap;flex-shrink:0">LNT-008 error</span>
+        <span style="font-size:12px;color:var(--muted2)">Acceptance Criteria ≥ 3 items</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
+        <span style="font-family:monospace;font-size:10px;color:var(--accent4);background:rgba(245,158,11,0.1);border-radius:4px;padding:2px 6px;white-space:nowrap;flex-shrink:0">LNT-009 warn</span>
+        <span style="font-size:12px;color:var(--muted2)">No vague AC phrases — "works correctly", "looks good", "is fast"</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
+        <span style="font-family:monospace;font-size:10px;color:var(--accent5);background:rgba(248,113,113,0.1);border-radius:4px;padding:2px 6px;white-space:nowrap;flex-shrink:0">LNT-010 error</span>
+        <span style="font-size:12px;color:var(--muted2)">Definition of Done ≥ 3 items</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
+        <span style="font-family:monospace;font-size:10px;color:var(--accent4);background:rgba(245,158,11,0.1);border-radius:4px;padding:2px 6px;white-space:nowrap;flex-shrink:0">LNT-011 warn</span>
+        <span style="font-size:12px;color:var(--muted2)">Escalation triggers section exists with ≥ 1 item</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Readiness states -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:24px">
+    <div style="background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.3);border-radius:8px;padding:16px;text-align:center">
+      <div style="font-size:16px;color:var(--accent5);font-weight:700">✗ Incomplete</div>
+      <div style="font-size:11px;color:var(--muted2);margin-top:6px">Has errors. Agent must not receive this brief. CI blocks merge.</div>
+    </div>
+    <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:16px;text-align:center">
+      <div style="font-size:16px;color:var(--accent4);font-weight:700">⚠ Review Needed</div>
+      <div style="font-size:11px;color:var(--muted2);margin-top:6px">Warnings only. Can compile and proceed — PM should review.</div>
+    </div>
+    <div style="background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.3);border-radius:8px;padding:16px;text-align:center">
+      <div style="font-size:16px;color:var(--accent3);font-weight:700">✓ Agent Ready</div>
+      <div style="font-size:11px;color:var(--muted2);margin-top:6px">All checks pass. Safe to hand to any AI coding agent.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════════
      DIRECT LLM vs PRODMAN
 ══════════════════════════════════════════ -->
 <div id="comparison">
@@ -1525,7 +1640,7 @@
         <div class="anatomy-why">Hard boundaries. Agent knows exactly what to build and what to leave alone.</div>
       </div>
       <div class="anatomy-item">
-        <div class="anatomy-field">must_not_do</div>
+        <div class="anatomy-field">anti_requirements</div>
         <div class="anatomy-why">Explicit stop list. Prevents overengineering and unauthorized scope expansion.</div>
       </div>
       <div class="anatomy-item">
@@ -1605,6 +1720,12 @@
         <span style="font-family:monospace;font-size:11px;color:var(--z2)">plan.md</span>
         <span style="font-size:10px;color:var(--muted)">Milestones + execution</span>
       </div>
+      <div style="height:1px;background:var(--border);margin:8px 0"></div>
+      <div class="output-map-row">
+        <span style="font-family:monospace;font-size:11px;color:var(--accent3)">compiled-spec.json ◆</span>
+        <span style="font-size:10px;color:var(--muted)">Machine-readable contract</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted2);margin-top:4px">Written by <code style="font-size:10px">prodman compile</code> — 11 validated fields, versioned</div>
     </div>
 
     <div class="output-map-card">
@@ -1647,7 +1768,7 @@
 
 <!-- ── FOOTER ── -->
 <footer>
-  <span>ProdMan v0.1 — AI-native PM framework</span>
+  <span>ProdMan v0.1.0 — AI-native PM framework</span>
   <span>MIT License · <a href="https://github.com/VisNavyVet/PRODMAN" target="_blank">github.com/VisNavyVet/PRODMAN</a></span>
 </footer>
 
