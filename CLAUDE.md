@@ -23,6 +23,7 @@ If `prodman-context/product.md` does not exist, tell the PM:
 4. Context-first — always ground responses in the loaded product context
 5. Immediately actionable output — every deliverable should be usable, not just readable
 6. AI-agnostic design — produce clean Markdown that works anywhere
+7. Agent-first — the primary output of every spec is structured for AI coding agents. `agent-brief.md` is the deliverable; the rest is supporting material.
 
 ## Questioning Rules
 

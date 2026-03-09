@@ -21,7 +21,7 @@ Then ask the following questions **one at a time**, waiting for an answer before
 2. "Who are your users? Describe the 2–4 most important segments — not demographics, but what they're trying to accomplish and how your product fits into that."
 3. "What problem do you solve better than alternatives? And what are you explicitly NOT trying to be?"
 4. "What are your main constraints — technical, legal, team size, budget, or timeline?"
-5. "What has your team already decided? Think: features shipped, things ruled out, major pivots, active strategic bets."
+5. "What have you already built, ruled out, or committed to as a team? Include pivots, feature bets, explicit non-starters — even informal decisions. Dead ends count too."
 
 If the PM pastes existing docs at any point, extract answers to the remaining questions from those docs instead of asking them.
 

@@ -107,12 +107,22 @@ After writing, tell the PM: "Learning block added to `prodman-context/history.md
 
 ---
 
-**Step 3: Flag context updates (do not auto-write)**
+**Step 3: Append a Context Review Checklist to retro.md**
 
-Based on the retro discussion, identify if any of the following need updating — and propose specific edits for PM confirmation before writing:
+At the end of the retro document, append the following section. Fill in any specific items surfaced in the retro discussion:
 
-- **`prodman-context/product.md`** — Did this feature change positioning, scope, or how you describe the product?
-- **`prodman-context/users.md`** — Did you learn something new about a user segment, or did a new segment emerge?
-- **`prodman-context/constraints.md`** — Are there new technical or org constraints to document?
+```markdown
+---
 
-Only flag items where a meaningful update is warranted. Skip if nothing has changed.
+## Context Review Checklist
+
+Review these files and update them manually if the retro surfaced new information:
+
+- [ ] **`prodman-context/product.md`** — [Did this feature change positioning, scope, or how you describe the product? Note specific change if yes, or write "No change".]
+- [ ] **`prodman-context/users.md`** — [Did you learn something new about a user segment, or discover a new segment? Note specific change if yes, or write "No change".]
+- [ ] **`prodman-context/constraints.md`** — [Are there new technical or org constraints to document? Note specific change if yes, or write "No change".]
+
+> Open each file in your editor and apply changes directly. Future commands will pick up the updated context automatically.
+```
+
+After writing, tell the PM: "Retro complete. Check the Context Review Checklist at the bottom of `retro.md` — open each context file directly to apply any updates."
