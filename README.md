@@ -4,8 +4,9 @@
 [![AI Agnostic](https://img.shields.io/badge/AI-Agnostic-green)](integrations/universal.md)
 [![Works with Claude Code](https://img.shields.io/badge/Works%20with-Claude%20Code-blue)](https://claude.ai/code)
 [![Works with Cursor](https://img.shields.io/badge/Works%20with-Cursor-black)](https://cursor.sh)
-[![Version](https://img.shields.io/badge/version-0.1.0-brightgreen)]()
+[![Version](https://img.shields.io/badge/version-0.2.0-brightgreen)]()
 [![npm @prodman/cli](https://img.shields.io/badge/npm-%40prodman%2Fcli-red)](https://www.npmjs.com/package/@prodman/cli)
+[![VS Code Extension](https://img.shields.io/badge/VS%20Code-%40prodman%2Fvscode-007ACC)](packages/vscode)
 
 **An open-source PM framework for teams building with AI agents.**
 Structured thinking. Persistent product memory. Agent-ready output — from signal to ship.
@@ -92,6 +93,38 @@ prodman-context/
 ProdMan won't write a spec. It'll ask you one question first.
 
 **In any other AI tool:** Open `prodman/commands/pm-signal.md`, paste it into your chat, then add your signal.
+
+---
+
+## VS Code Extension — Drop 2
+
+`@prodman/vscode` brings the ProdMan spec quality loop directly into your editor. No command palette hunting. No context switching. The tight loop — open brief → lint guides → quick fix repairs → run → preview → clipboard — happens inline.
+
+**What ships in Drop 2:**
+
+| Feature | What it does |
+|---------|-------------|
+| **Spec Linter** | Ambient inline diagnostics on `agent-brief.md` as you type — powered by all 11 `@prodman/core` rules |
+| **Readiness Bar** | Status bar shows `PRODMAN ✓ Agent Ready — 11/11 rules passing` at all times |
+| **Agent Brief Launcher** | Lint → compile → assemble payload → copy to clipboard in one click |
+| **CodeLens Actions** | `▶ Run with PRODMAN \| Validate Spec \| Preview Spec.json` inline at the top of every brief |
+| **Quick Fixes** | Click a lint error → section template inserted automatically |
+| **Init Wizard** | Detects missing workspace context on startup, generates `prodman-context/` with a prompt |
+| **Spec Preview** | Read-only webview of the compiled `spec.json` with syntax highlighting and Copy JSON button |
+
+**Extension activates when your workspace contains:**
+- `CLAUDE.md`
+- `prodman-context/product.md`
+- `features/**/agent-brief.md`
+
+**Install from source (until Marketplace publish):**
+
+```bash
+cd packages/vscode
+npm install
+npm run build
+# Then install the VSIX via: Extensions → Install from VSIX
+```
 
 ---
 
@@ -334,9 +367,10 @@ features/[feature-name]/      ← generated per feature
 | v0 | Core commands, templates, schemas, integration guides | ✓ Done |
 | v0.1 | Living memory, agent-first output, ticket export, audience lenses, cross-session continuity | ✓ Done |
 | **v0.1.0 (Drop 1)** | **`@prodman/core` + `@prodman/cli` + GitHub Action + 11 lint rules + spec compiler** | **✓ Done** |
-| v0.2 (Drop 2) | VS Code extension — ambient linting, context health panel, signal inbox, pipeline dashboard | Planned |
-| v0.3 | MCP integration — zero-friction agent handoff from Claude Code | Planned |
-| v0.4 | Live integrations — Linear/Jira push, team context sharing | Planned |
+| **v0.2 (Drop 2)** | **`@prodman/vscode` — spec linter, readiness bar, agent brief launcher, CodeLens actions, quick fixes, init wizard, spec preview** | **✓ Done** |
+| v0.3 | VS Code extension — context health panel, signal inbox, pipeline dashboard, brief generator, smart suggestions | Planned |
+| v0.4 | MCP integration — zero-friction agent handoff from Claude Code | Planned |
+| v0.5 | Live integrations — Linear/Jira push, team context sharing | Planned |
 
 ---
 

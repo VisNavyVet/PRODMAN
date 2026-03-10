@@ -88,6 +88,32 @@ class Compiler {
         fs.writeFileSync(outputPath, JSON.stringify(spec, null, 2));
         return { outputPath, spec, lintResult };
     }
+    /**
+     * Compile an agent-brief from an in-memory content string — no filesystem reads or writes.
+     * Used by the VS Code extension to compile the active editor document without saving.
+     */
+    compileToSpec(featureName, content, options = {}) {
+        const { allowIncomplete = false, contextRefs = {} } = options;
+        const linter = new Linter_1.Linter();
+        const lintResult = linter.lintContent(featureName, content);
+        if (lintResult.readiness === 'incomplete' && !allowIncomplete) {
+            throw new types_1.CompileError(`Spec is incomplete — ${lintResult.diagnostics.filter(d => d.severity === 'error').length} error(s) must be fixed before compiling.`, lintResult.diagnostics);
+        }
+        const sections = (0, MarkdownSectionParser_1.parseMarkdownSections)(content);
+        const resolvedRefs = {
+            product_md: contextRefs.product_md ?? 'prodman-context/product.md',
+            users_md: contextRefs.users_md ?? 'prodman-context/users.md',
+            tech_md: contextRefs.tech_md ?? null,
+            agent_brief_md: contextRefs.agent_brief_md ?? `features/${featureName}/agent-brief.md`,
+        };
+        const spec = (0, SpecMapper_1.mapSectionsToSpec)(sections, {
+            featureName,
+            specVersion: 0,
+            readiness: lintResult.readiness,
+            contextRefs: resolvedRefs,
+        });
+        return { spec, lintResult };
+    }
 }
 exports.Compiler = Compiler;
 //# sourceMappingURL=Compiler.js.map

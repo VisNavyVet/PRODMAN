@@ -1,10 +1,35 @@
 # ProdMan Backlog
 
-Items sourced from v0.1 review. Targeted for v0.2.
+---
+
+## v0.2 (Drop 2) — `@prodman/vscode` Extension MVP
+
+Scope: the tight loop — open brief → lint guides → quick fix repairs → run → preview → clipboard.
+
+### Must Ship
+
+| Component | Description |
+|-----------|-------------|
+| **Spec Linter** (`SpecDiagnosticsProvider`) | Ambient inline diagnostics for `agent-brief.md` using `@prodman/core` rules with line/column positions |
+| **SpecReadinessBar** | Status bar: `PRODMAN ✓ Agent Ready — 11/11 rules passing` derived from actual lint results |
+| **Agent Brief Launcher** | Lint → compile → assemble payload → copy to clipboard |
+| **CodeLens Actions** | `Run with PRODMAN \| Validate Spec \| Preview Spec.json` inline at top of `agent-brief.md` |
+| **Quick Fixes** | `CodeActionProvider` inserts section templates directly from lint errors |
+| **Init Wizard** | On workspace open, if no context files detected, prompt to initialize — generates identical output to `/pm-import` |
+| **Spec Preview** | Read-only webview of compiled `spec.json` with JSON highlighting and copy button |
+
+### Core Updates Required (blocking extension work)
+- `@prodman/core`: expose linter results with line/column positions
+- `@prodman/core`: export canonical section templates (used by autocomplete + quick fixes)
+- `@prodman/core`: verify compiler is importable as a TypeScript module in VS Code extension context
+
+### Pre-conditions (resolve before P1 wiring)
+- BL-03: Clarify `/pm-agent-brief` vs `/pm-ff` agent-brief
+- BL-06: Add file-existence guard to `/pm-handoff`
 
 ---
 
-## v0.2 — Cross-Session Continuity & Command Clarity
+## v0.2 (Drop 2) — Command Clarity Backlog (carried from v0.1 review)
 
 ### High Priority
 
@@ -51,6 +76,23 @@ Items sourced from v0.1 review. Targeted for v0.2.
 **Problem:** "What has your team already decided?" is the weakest of the five questions — too broad, produces vague answers.
 **Fix:** Reframe as: "What have you already built, ruled out, or committed to as a team? Include any pivots, feature bets, or explicit non-starters."
 **Impact:** Low — improves the quality of `history.md` bootstrap.
+
+---
+
+## v0.3 (Drop 3) — VS Code Extension Expansion
+
+Deferred from Drop-2 to keep the MVP focused.
+
+| Component | Description | Defer Reason |
+|-----------|-------------|--------------|
+| Context Health Panel | Sidebar showing health of `prodman-context/` files | Not in critical loop |
+| Signal Inbox | Capture product signals; convert to structured entries | Underspecified; needs mini-spec |
+| Pipeline Dashboard | Webview showing all features across lifecycle stages | Nice-to-have; adds complexity |
+| Feature Brief Generator | Generate `agent-brief.md` from natural language input | Quality contract needs design; quick fixes cover same need more safely |
+| Spec Section Autocomplete | IntelliSense for spec sections with template expansion | Depends on Brief Generator quality contract |
+| Folder → Feature Suggestion | Prompt to create brief when new module folders appear | Noise risk without dismissal persistence + blocklist |
+| Smart Suggestions | Context-aware prompts (e.g. dependency changes → update context) | `tech.md` vs `constraints.md` naming unresolved |
+| TechDetector / DriftDetector | Detect stack changes; flag context drift | Deferred with Context Health Panel |
 
 ---
 

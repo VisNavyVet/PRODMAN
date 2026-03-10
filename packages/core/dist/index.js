@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CompileError = exports.mapSectionsToSpec = exports.getNextVersion = exports.Compiler = exports.extractTableRows = exports.extractBulletItems = exports.countBulletItems = exports.normaliseHeading = exports.parseMarkdownSections = exports.AGENT_BRIEF_RULES = exports.RuleEngine = exports.Linter = void 0;
+exports.CompileError = exports.mapSectionsToSpec = exports.getNextVersion = exports.Compiler = exports.AGENT_BRIEF_SCAFFOLD = exports.SECTION_TEMPLATES = exports.extractTableRows = exports.extractBulletItems = exports.countBulletItems = exports.normaliseHeading = exports.parseMarkdownSections = exports.AGENT_BRIEF_RULES = exports.RuleEngine = exports.Linter = void 0;
 // Linter
 var Linter_1 = require("./linter/Linter");
 Object.defineProperty(exports, "Linter", { enumerable: true, get: function () { return Linter_1.Linter; } });
@@ -13,6 +13,9 @@ Object.defineProperty(exports, "normaliseHeading", { enumerable: true, get: func
 Object.defineProperty(exports, "countBulletItems", { enumerable: true, get: function () { return MarkdownSectionParser_1.countBulletItems; } });
 Object.defineProperty(exports, "extractBulletItems", { enumerable: true, get: function () { return MarkdownSectionParser_1.extractBulletItems; } });
 Object.defineProperty(exports, "extractTableRows", { enumerable: true, get: function () { return MarkdownSectionParser_1.extractTableRows; } });
+var SectionTemplates_1 = require("./linter/SectionTemplates");
+Object.defineProperty(exports, "SECTION_TEMPLATES", { enumerable: true, get: function () { return SectionTemplates_1.SECTION_TEMPLATES; } });
+Object.defineProperty(exports, "AGENT_BRIEF_SCAFFOLD", { enumerable: true, get: function () { return SectionTemplates_1.AGENT_BRIEF_SCAFFOLD; } });
 // Compiler
 var Compiler_1 = require("./compiler/Compiler");
 Object.defineProperty(exports, "Compiler", { enumerable: true, get: function () { return Compiler_1.Compiler; } });

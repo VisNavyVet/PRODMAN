@@ -2,6 +2,8 @@
 export { Linter } from './linter/Linter'
 export { RuleEngine, AGENT_BRIEF_RULES } from './linter/RuleEngine'
 export { parseMarkdownSections, normaliseHeading, countBulletItems, extractBulletItems, extractTableRows } from './linter/MarkdownSectionParser'
+export { SECTION_TEMPLATES, AGENT_BRIEF_SCAFFOLD } from './linter/SectionTemplates'
+export type { SectionTemplate } from './linter/SectionTemplates'
 export type { ParsedSection, LintDiagnostic, LintResult, ReadinessState, FileType, Rule } from './linter/types'
 
 // Compiler
@@ -19,4 +21,4 @@ export type {
   CompiledSpecConstraints,
   CompiledSpecContextRefs,
 } from './compiler/types'
-export type { CompileResult } from './compiler/Compiler'
+export type { CompileResult, CompileToSpecResult, CompileToSpecOptions } from './compiler/Compiler'

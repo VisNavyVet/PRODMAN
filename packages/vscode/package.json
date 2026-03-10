@@ -1,0 +1,100 @@
+{
+  "name": "@prodman/vscode",
+  "displayName": "ProdMan",
+  "description": "AI-ready spec linting and agent brief launcher for VS Code",
+  "version": "0.2.0",
+  "publisher": "prodman",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0",
+    "node": ">=18.0.0"
+  },
+  "categories": [
+    "Linters",
+    "Other"
+  ],
+  "keywords": [
+    "prodman",
+    "spec",
+    "ai",
+    "agent",
+    "product-management"
+  ],
+  "icon": "assets/icon.png",
+  "activationEvents": [
+    "workspaceContains:CLAUDE.md",
+    "workspaceContains:prodman-context/product.md",
+    "workspaceContains:features/**/agent-brief.md",
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "prodman.captureSignal",
+        "title": "Capture Signal",
+        "category": "ProdMan"
+      },
+      {
+        "command": "prodman.launchAgent",
+        "title": "Launch Agent from Brief",
+        "category": "ProdMan"
+      },
+      {
+        "command": "prodman.compileSpec",
+        "title": "Compile Spec → spec.json",
+        "category": "ProdMan"
+      },
+      {
+        "command": "prodman.previewSpec",
+        "title": "Preview Compiled Spec",
+        "category": "ProdMan"
+      },
+      {
+        "command": "prodman.initWorkspace",
+        "title": "Initialize PRODMAN Workspace",
+        "category": "ProdMan"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "prodman.launchAgent",
+          "when": "resourceFilename == 'agent-brief.md'",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "prodman.launchAgent",
+          "when": "resourceFilename == 'agent-brief.md'"
+        },
+        {
+          "command": "prodman.compileSpec",
+          "when": "resourceFilename == 'agent-brief.md'"
+        },
+        {
+          "command": "prodman.previewSpec",
+          "when": "resourceFilename == 'agent-brief.md'"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "build:watch": "tsc -p tsconfig.json --watch",
+    "clean": "rimraf dist",
+    "lint": "tsc --noEmit",
+    "test": "echo \"No vscode tests yet\" && exit 0"
+  },
+  "dependencies": {
+    "@prodman/core": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.4.0",
+    "rimraf": "^5.0.0"
+  }
+}
