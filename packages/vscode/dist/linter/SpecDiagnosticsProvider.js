@@ -57,7 +57,7 @@ class SpecDiagnosticsProvider {
         });
         const totalRules = lintResult.diagnostics.length > 0
             ? this.getTotalRuleCount(lintResult)
-            : 11; // AGENT_BRIEF_RULES.length
+            : 12; // AGENT_BRIEF_RULES.length
         const failingRules = new Set(lintResult.diagnostics.map(d => d.rule)).size;
         const rulesPassing = totalRules - failingRules;
         return {
@@ -73,8 +73,8 @@ class SpecDiagnosticsProvider {
         const maxRule = ruleIds.reduce((max, id) => {
             const n = parseInt(id.replace('LNT-', ''), 10);
             return isNaN(n) ? max : Math.max(max, n);
-        }, 11);
-        return Math.max(maxRule, 11);
+        }, 12);
+        return Math.max(maxRule, 12);
     }
 }
 exports.SpecDiagnosticsProvider = SpecDiagnosticsProvider;

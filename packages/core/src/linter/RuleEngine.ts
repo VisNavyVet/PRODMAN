@@ -10,11 +10,13 @@ import { LNT008 } from './rules/agent-brief/LNT008-AcceptanceCriteria'
 import { LNT009 } from './rules/agent-brief/LNT009-VagueAC'
 import { LNT010 } from './rules/agent-brief/LNT010-DefinitionOfDone'
 import { LNT011 } from './rules/agent-brief/LNT011-EscalationTriggers'
+import { LNT012 } from './rules/agent-brief/LNT012-TechContextFilled'
 
 /** All rules that apply to agent-brief.md files */
 export const AGENT_BRIEF_RULES: Rule[] = [
   LNT001, LNT002, LNT003, LNT004, LNT005,
   LNT006, LNT007, LNT008, LNT009, LNT010, LNT011,
+  LNT012,
 ]
 
 export class RuleEngine {

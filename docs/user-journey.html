@@ -679,12 +679,87 @@
     .memory-files { margin-left: 0; }
     .zone-subtitle { display: none; }
   }
+
+  /* ── NARRATIVE ── */
+  .narrative {
+    max-width: 860px;
+    margin: 0 auto 48px;
+    padding: 48px 0 0;
+  }
+  .narrative-act {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  @media (max-width: 768px) { .narrative-act { grid-template-columns: 1fr; } }
+  .narrative-card {
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .narrative-card.pain {
+    background: rgba(248,113,113,0.06);
+    border: 1px solid rgba(248,113,113,0.2);
+  }
+  .narrative-card.solve {
+    background: rgba(52,211,153,0.06);
+    border: 1px solid rgba(52,211,153,0.2);
+  }
+  .narrative-card-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
+  }
+  .narrative-card.pain .narrative-card-label { color: var(--pain); }
+  .narrative-card.solve .narrative-card-label { color: var(--solve); }
+  .narrative-scene {
+    font-size: 13px;
+    color: var(--muted2);
+    line-height: 1.8;
+  }
+  .narrative-scene p { margin-bottom: 10px; }
+  .narrative-scene p:last-child { margin-bottom: 0; }
+  .narrative-scene strong { color: var(--text); font-weight: 600; }
+  .narrative-resolution {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 24px;
+    margin-top: 8px;
+  }
+  .narrative-resolution-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .narrative-resolution p {
+    font-size: 13px;
+    color: var(--muted2);
+    line-height: 1.8;
+    margin-bottom: 8px;
+  }
+  .narrative-resolution p:last-child { margin-bottom: 0; }
+  .narrative-resolution strong { color: var(--text); font-weight: 600; }
+  .narrative-bridge {
+    margin-top: 20px;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
 </style>
 </head>
 <body>
 
 <!-- ── NAV ── -->
 <nav class="topnav">
+  <a href="#story">Story</a>
+  <span class="nav-sep">|</span>
   <a href="#flow">Flow</a>
   <span class="nav-sep">|</span>
   <a href="#utility">Setup</a>
@@ -726,6 +801,41 @@
 </div>
 
 <div class="main">
+
+<!-- ── NARRATIVE ── -->
+<div id="story" class="narrative">
+  <div class="narrative-act">
+
+    <div class="narrative-card pain">
+      <div class="narrative-card-label">Before ProdMan</div>
+      <div class="narrative-scene">
+        <p>You're building with AI agents. The first session goes well — you paste a PRD into Claude Code, the agent ships something reasonable.</p>
+        <p>The second session: <strong>you re-explain everything.</strong> Product, users, constraints, scope. The agent doesn't remember. It never did.</p>
+        <p>The third session: the agent modifies a component you said was out of scope. No escalation trigger. It just decided. You find out when you review the diff.</p>
+        <p>Friday retro: you write down what went wrong. The doc goes into Notion. <strong>Next feature, you start cold again.</strong></p>
+      </div>
+    </div>
+
+    <div class="narrative-card solve">
+      <div class="narrative-card-label">With ProdMan</div>
+      <div class="narrative-scene">
+        <p>Your product context lives in <code style="font-size:11px;color:var(--accent)">prodman-context/</code> — product, users, constraints, decisions. Every command loads it automatically.</p>
+        <p><strong>Zone 1 captures your thinking</strong> as it happens. Signal, framing, exploration — each written to disk. Close your session. Come back tomorrow. Nothing is lost.</p>
+        <p><strong>agent-brief.md</strong> is a self-contained context package: stack, constraints, AC, escalation triggers, out-of-scope list. The agent doesn't guess. It executes.</p>
+        <p>After every feature, <code style="font-size:11px;color:var(--accent)">/pm-retro</code> appends learnings to <code style="font-size:11px;color:var(--accent)">history.md</code>. <strong>The next feature starts smarter.</strong></p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="narrative-resolution">
+    <div class="narrative-resolution-label">The core idea</div>
+    <p>ProdMan is <strong>persistent product memory + structured agent handoff</strong>. Two things that don't exist in any AI coding tool today.</p>
+    <p>Your thinking — the signal, the framing, the tradeoffs, the constraints — becomes durable. Every AI agent, every session, every model gets the same structured context. <strong>Consistent input. Consistent output.</strong></p>
+    <p>The workflow below shows how it works end to end.</p>
+  </div>
+  <div class="narrative-bridge">↓ &nbsp; End-to-end workflow</div>
+</div>
 
 <!-- ── END-TO-END FLOW ── -->
 <div id="flow" class="full-flow">
@@ -1326,7 +1436,7 @@
 ══════════════════════════════════════════ -->
 <div id="cli">
   <div class="section-title">CLI &amp; CI — Validate Before Any Agent Sees the Spec</div>
-  <div class="section-desc">The <code>@prodman/cli</code> validates your <code>agent-brief.md</code> against 11 lint rules and compiles it to a machine-readable JSON contract. Use it locally or as a CI gate.</div>
+  <div class="section-desc">The <code>@prodman/cli</code> validates your <code>agent-brief.md</code> against 12 lint rules and compiles it to a machine-readable JSON contract. Use it locally or as a CI gate.</div>
 
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:24px">
 
@@ -1359,7 +1469,7 @@
 
   <!-- 11 Rules -->
   <div style="margin-top:32px">
-    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:16px">11 lint rules — what gets checked on every <code style="font-size:12px">agent-brief.md</code></div>
+    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:16px">12 lint rules — what gets checked on every <code style="font-size:12px">agent-brief.md</code></div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:8px">
       <div style="display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
         <span style="font-family:monospace;font-size:10px;color:var(--accent5);background:rgba(248,113,113,0.1);border-radius:4px;padding:2px 6px;white-space:nowrap;flex-shrink:0">LNT-001 error</span>
@@ -1404,6 +1514,10 @@
       <div style="display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
         <span style="font-family:monospace;font-size:10px;color:var(--accent4);background:rgba(245,158,11,0.1);border-radius:4px;padding:2px 6px;white-space:nowrap;flex-shrink:0">LNT-011 warn</span>
         <span style="font-size:12px;color:var(--muted2)">Escalation triggers section exists with ≥ 1 item</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
+        <span style="font-family:monospace;font-size:10px;color:var(--accent5);background:rgba(248,113,113,0.1);border-radius:4px;padding:2px 6px;white-space:nowrap;flex-shrink:0">LNT-012 error</span>
+        <span style="font-size:12px;color:var(--muted2)">Technical Context filled — repository, stack, and relevant files not placeholder text</span>
       </div>
     </div>
   </div>
@@ -1779,7 +1893,7 @@
           <span style="font-size:11px;font-weight:700;color:var(--accent3);text-transform:uppercase;letter-spacing:.5px">Done — v0 + v0.1</span>
         </div>
         <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:6px">Foundation + CLI</div>
-        <div style="font-size:12px;color:var(--muted2);line-height:1.6">12 PM commands · persistent context · 5-file spec bundle · <code style="font-size:11px">@prodman/core</code> linter + compiler · <code style="font-size:11px">@prodman/cli</code> · 11 lint rules · GitHub Action</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.6">12 PM commands · persistent context · 5-file spec bundle · <code style="font-size:11px">@prodman/core</code> linter + compiler · <code style="font-size:11px">@prodman/cli</code> · 12 lint rules · GitHub Action</div>
       </div>
 
       <div style="background:var(--surface2);border:1px solid rgba(52,211,153,0.3);border-radius:12px;padding:20px">
@@ -1792,17 +1906,19 @@
         <div style="margin-top:10px;font-family:monospace;font-size:11px;color:var(--accent3);background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);padding:4px 10px;border-radius:5px;display:inline-block">@prodman/vscode</div>
       </div>
 
-      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;opacity:0.8">
+      <div style="background:var(--surface2);border:1px solid rgba(52,211,153,0.3);border-radius:12px;padding:20px">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-          <span style="font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px">Next — v0.3 Drop 3</span>
+          <span style="font-size:14px">✓</span>
+          <span style="font-size:11px;font-weight:700;color:var(--accent3);text-transform:uppercase;letter-spacing:.5px">Done — v0.3</span>
         </div>
         <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:6px">VS Code Expansion</div>
-        <div style="font-size:12px;color:var(--muted2);line-height:1.6">Context health panel · signal inbox · pipeline dashboard · feature brief generator · smart suggestions · folder → brief detection</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.6">Context health panel · signal inbox · pipeline dashboard · drift detection · LNT-012 · Marketplace-ready packaging</div>
+        <div style="margin-top:10px;font-family:monospace;font-size:11px;color:var(--accent3);background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);padding:4px 10px;border-radius:5px;display:inline-block">@prodman/vscode v0.3.0</div>
       </div>
 
-      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;opacity:0.6">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;opacity:0.8">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-          <span style="font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px">Later — v0.4</span>
+          <span style="font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px">Next — v0.4</span>
         </div>
         <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:6px">MCP + Live Integrations</div>
         <div style="font-size:12px;color:var(--muted2);line-height:1.6">MCP server for zero-friction agent handoff · Linear / Jira push · team context sharing</div>
@@ -1816,7 +1932,7 @@
 
 <!-- ── FOOTER ── -->
 <footer>
-  <span>ProdMan v0.2.0 — AI-native PM framework</span>
+  <span>ProdMan v0.3.0 — AI-native PM framework</span>
   <span>MIT License · <a href="https://github.com/VisNavyVet/PRODMAN" target="_blank">github.com/VisNavyVet/PRODMAN</a></span>
 </footer>
 

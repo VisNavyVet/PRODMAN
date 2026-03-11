@@ -2,7 +2,7 @@
   "name": "@prodman/vscode",
   "displayName": "ProdMan",
   "description": "AI-ready spec linting and agent brief launcher for VS Code",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "prodman",
   "private": true,
   "license": "MIT",
@@ -30,11 +30,38 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "prodman",
+          "title": "ProdMan",
+          "icon": "assets/icon.png"
+        }
+      ]
+    },
+    "views": {
+      "prodman": [
+        {
+          "id": "prodmanContextHealth",
+          "name": "Context Health"
+        },
+        {
+          "id": "prodmanSignalInbox",
+          "name": "Signal Inbox"
+        },
+        {
+          "id": "prodmanPipeline",
+          "name": "Feature Pipeline",
+          "type": "webview"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "prodman.captureSignal",
         "title": "Capture Signal",
-        "category": "ProdMan"
+        "category": "ProdMan",
+        "icon": "$(lightbulb)"
       },
       {
         "command": "prodman.launchAgent",
@@ -55,6 +82,24 @@
         "command": "prodman.initWorkspace",
         "title": "Initialize PRODMAN Workspace",
         "category": "ProdMan"
+      },
+      {
+        "command": "prodman.refreshContextHealth",
+        "title": "Refresh",
+        "category": "ProdMan",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "prodman.refreshSignalInbox",
+        "title": "Refresh",
+        "category": "ProdMan",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "prodman.refreshPipeline",
+        "title": "Refresh",
+        "category": "ProdMan",
+        "icon": "$(refresh)"
       }
     ],
     "menus": {
@@ -77,6 +122,40 @@
         {
           "command": "prodman.previewSpec",
           "when": "resourceFilename == 'agent-brief.md'"
+        },
+        {
+          "command": "prodman.refreshContextHealth",
+          "when": "false"
+        },
+        {
+          "command": "prodman.refreshSignalInbox",
+          "when": "false"
+        },
+        {
+          "command": "prodman.refreshPipeline",
+          "when": "false"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "prodman.captureSignal",
+          "when": "view == prodmanSignalInbox",
+          "group": "navigation"
+        },
+        {
+          "command": "prodman.refreshSignalInbox",
+          "when": "view == prodmanSignalInbox",
+          "group": "navigation"
+        },
+        {
+          "command": "prodman.refreshContextHealth",
+          "when": "view == prodmanContextHealth",
+          "group": "navigation"
+        },
+        {
+          "command": "prodman.refreshPipeline",
+          "when": "view == prodmanPipeline",
+          "group": "navigation"
         }
       ]
     }

@@ -4,7 +4,7 @@
 [![AI Agnostic](https://img.shields.io/badge/AI-Agnostic-green)](integrations/universal.md)
 [![Works with Claude Code](https://img.shields.io/badge/Works%20with-Claude%20Code-blue)](https://claude.ai/code)
 [![Works with Cursor](https://img.shields.io/badge/Works%20with-Cursor-black)](https://cursor.sh)
-[![Version](https://img.shields.io/badge/version-0.2.0-brightgreen)]()
+[![Version](https://img.shields.io/badge/version-0.3.0-brightgreen)]()
 [![npm @prodman/cli](https://img.shields.io/badge/npm-%40prodman%2Fcli-red)](https://www.npmjs.com/package/@prodman/cli)
 [![VS Code Extension](https://img.shields.io/badge/VS%20Code-%40prodman%2Fvscode-007ACC)](packages/vscode)
 
@@ -45,7 +45,7 @@ ProdMan is two things working together: **12 AI command prompts** for the PM wor
      ↓
 /pm-ff              ← Full spec bundle in one shot. Agent brief is primary output.
      ↓
-prodman validate    ← 11 lint rules catch vague AC, missing escalation triggers, etc.
+prodman validate    ← 12 lint rules catch vague AC, missing escalation triggers, unfilled tech context, etc.
 prodman compile     ← Compiles agent-brief.md → compiled-spec.json (machine-readable)
      ↓
 /pm-handoff         ← engineer / designer / exec / tickets — each gets their view.
@@ -67,6 +67,16 @@ No prerequisites. Clone and go. Claude Code gives you native slash commands — 
 git clone https://github.com/VisNavyVet/PRODMAN.git
 cd PRODMAN
 ```
+
+**Which path is right for you?**
+
+| Situation | Start here |
+|-----------|-----------|
+| Starting a new feature from scratch | Step 1 → Zone 1 below |
+| Already have a PRD, ticket, or existing spec | [`/pm-agent-brief`](#fast-path--existing-docs) — skip to an agent-ready brief in minutes |
+| Want to validate assumptions before speccing | [`/pm-research`](prodman/commands/pm-research.md) |
+
+---
 
 **Step 1 — Bootstrap your product context (once)**
 
@@ -90,47 +100,63 @@ prodman-context/
 /pm-signal Customer support is seeing a spike in "can't find past orders" tickets
 ```
 
-ProdMan won't write a spec. It'll ask you one question first.
+ProdMan won't write a spec. It'll ask you one question first. When the dialogue is complete, it'll ask for a working feature name and write `features/[name]/signal.md` — so your thinking persists even if you close the session.
 
 **In any other AI tool:** Open `prodman/commands/pm-signal.md`, paste it into your chat, then add your signal.
 
 ---
 
-## VS Code Extension — Drop 2
+### Fast Path — Existing Docs
+
+Already have a PRD, Jira ticket, Notion doc, or rough spec? Skip Zone 1 entirely.
+
+```
+/pm-agent-brief [feature-name]
+```
+
+Paste your existing docs when prompted. ProdMan generates a validated, agent-ready `agent-brief.md` directly. Use this when:
+- You have docs from outside ProdMan and need an agent brief fast
+- You've updated `handoff-eng.md` with new technical decisions and need to regenerate the brief
+
+---
+
+## VS Code Extension
 
 `@prodman/vscode` brings the ProdMan spec quality loop directly into your editor. No command palette hunting. No context switching. The tight loop — open brief → lint guides → quick fix repairs → run → preview → clipboard — happens inline.
 
-**What ships in Drop 2:**
-
 | Feature | What it does |
 |---------|-------------|
-| **Spec Linter** | Ambient inline diagnostics on `agent-brief.md` as you type — powered by all 11 `@prodman/core` rules |
-| **Readiness Bar** | Status bar shows `PRODMAN ✓ Agent Ready — 11/11 rules passing` at all times |
+| **Spec Linter** | Ambient inline diagnostics on `agent-brief.md` as you type — powered by all 12 `@prodman/core` rules |
+| **Readiness Bar** | Status bar shows `PRODMAN ✓ Agent Ready — 12/12 rules passing` at all times |
 | **Agent Brief Launcher** | Lint → compile → assemble payload → copy to clipboard in one click |
 | **CodeLens Actions** | `▶ Run with PRODMAN \| Validate Spec \| Preview Spec.json` inline at the top of every brief |
 | **Quick Fixes** | Click a lint error → section template inserted automatically |
-| **Init Wizard** | Detects missing workspace context on startup, generates `prodman-context/` with a prompt |
+| **Init Wizard** | Detects missing workspace context on startup, generates `prodman-context/` with a prompt; auto-fills stack from codebase |
 | **Spec Preview** | Read-only webview of the compiled `spec.json` with syntax highlighting and Copy JSON button |
+| **Context Health** | Sidebar panel showing health of all `prodman-context/` files; flags stack drift when `constraints.md` is out of sync with detected tech stack |
+| **Signal Inbox** | Sidebar panel showing captured signals from `prodman-context/signals.md`, most recent first |
+| **Feature Pipeline** | Sidebar dashboard showing all features, their zone, and `agent-brief.md` readiness at a glance |
 
 **Extension activates when your workspace contains:**
 - `CLAUDE.md`
 - `prodman-context/product.md`
 - `features/**/agent-brief.md`
 
-**Install from source (until Marketplace publish):**
+**Install:**
 
 ```bash
+# From Marketplace: search "ProdMan" in VS Code Extensions
+# From source:
 cd packages/vscode
-npm install
-npm run build
-# Then install the VSIX via: Extensions → Install from VSIX
+npm install && npm run build
+# Extensions → Install from VSIX
 ```
 
 ---
 
 ## CLI — Validate and Compile Specs
 
-ProdMan ships a CLI (`@prodman/cli`) that validates specs against 11 lint rules and compiles them to machine-readable JSON contracts. Use it locally or in CI.
+ProdMan ships a CLI (`@prodman/cli`) that validates specs against 12 lint rules and compiles them to machine-readable JSON contracts. Use it locally or in CI.
 
 ```bash
 npm install -g @prodman/cli
@@ -267,12 +293,12 @@ These 11 fields map directly to `compiled-spec.json` — the machine-readable co
 
 ## Command Reference
 
-### Utility — Run once per product
+### Utility
 
 | Command | What it does |
 |---|---|
-| `/pm-import` | 5-question interview → generates `prodman-context/`. Paste existing docs to skip ahead. |
-| `/pm-attach` | Load a file (image, PDF, spreadsheet) into context. Surfaces relevant signals, not just summaries. |
+| `/pm-import` | 5-question interview → generates `prodman-context/`. Run once per product. Paste existing docs to skip ahead. |
+| `/pm-attach` | Load a file (image, PDF, spreadsheet) into context. Usable at any zone. Surfaces relevant signals, not just summaries. |
 
 ### Zone 1 — Materialization
 *Turn raw signals into committed, falsifiable direction. AI questions before it prescribes.*
@@ -332,6 +358,9 @@ prodman-context/              ← persistent memory, loads before every command
 └── history.md                ← decisions + retro learnings — auto-grows via /pm-retro
 
 features/[feature-name]/      ← generated per feature
+├── signal.md                 ← Zone 1: raw signal + clarifications (written by /pm-signal)
+├── framing.md                ← Zone 1: chosen problem framing (written by /pm-frame)
+├── exploration.md            ← Zone 1: 6-dimension exploration (written by /pm-explore)
 ├── commitment.md             ← direction lock (written by /pm-commit)
 ├── agent-brief.md ★          ← primary output — for AI coding agents
 ├── brief.md                  ← 1-page PM summary
@@ -343,8 +372,47 @@ features/[feature-name]/      ← generated per feature
 ├── handoff-design.md         ← design brief
 ├── stakeholder-brief.md      ← exec 1-pager
 ├── tickets.md                ← Linear / Jira tickets
+├── handoff-response.md       ← eng/design feedback — /pm-ff reads this on regen
 └── retro.md                  ← retrospective
 ```
+
+---
+
+## Team Setup
+
+`prodman-context/` is plain Markdown committed to your repo. Every command loads it automatically. Sharing it across your team is git — nothing else needed.
+
+**Option A — Shared repo (recommended for product teams)**
+
+Check `prodman-context/` into your product repo. Everyone on the team gets the same product memory:
+
+```bash
+# In your product repo
+git add prodman-context/
+git commit -m "Add ProdMan product context"
+```
+
+Each PM works in their own branch; context updates (from `/pm-retro` or manual edits) are merged via PR like any other doc change.
+
+**Option B — Dedicated context repo**
+
+For orgs with multiple products or strict access controls, create a shared `[product]-context` repo containing only `prodman-context/`. Reference it in each product's `CLAUDE.md`:
+
+```
+Context lives at: ../[product]-context/prodman-context/
+```
+
+**Handoff response loop**
+
+When engineering or design receives a handoff doc (`handoff-eng.md`, `handoff-design.md`), they fill in `features/[name]/handoff-response.md` to log blockers, scope changes, answered questions, and technical discoveries. When the PM re-runs `/pm-ff [name]`, those responses are automatically incorporated into the spec bundle.
+
+```
+PM writes spec → /pm-ff →  handoff-eng.md  → Eng reviews
+                                                    ↓
+PM re-runs /pm-ff ← handoff-response.md ← Eng fills in
+```
+
+Use the template at [`templates/features/handoff-response.md`](templates/features/handoff-response.md).
 
 ---
 
@@ -366,9 +434,9 @@ features/[feature-name]/      ← generated per feature
 |---|---|---|
 | v0 | Core commands, templates, schemas, integration guides | ✓ Done |
 | v0.1 | Living memory, agent-first output, ticket export, audience lenses, cross-session continuity | ✓ Done |
-| **v0.1.0 (Drop 1)** | **`@prodman/core` + `@prodman/cli` + GitHub Action + 11 lint rules + spec compiler** | **✓ Done** |
+| **v0.1.0 (Drop 1)** | **`@prodman/core` + `@prodman/cli` + GitHub Action + 12 lint rules + spec compiler** | **✓ Done** |
 | **v0.2 (Drop 2)** | **`@prodman/vscode` — spec linter, readiness bar, agent brief launcher, CodeLens actions, quick fixes, init wizard, spec preview** | **✓ Done** |
-| v0.3 | VS Code extension — context health panel, signal inbox, pipeline dashboard, brief generator, smart suggestions | Planned |
+| **v0.3** | **VS Code sidebar — context health + drift detection, signal inbox, pipeline dashboard · LNT-012 · Marketplace packaging** | **✓ Done** |
 | v0.4 | MCP integration — zero-friction agent handoff from Claude Code | Planned |
 | v0.5 | Live integrations — Linear/Jira push, team context sharing | Planned |
 

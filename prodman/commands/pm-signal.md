@@ -34,4 +34,46 @@ After the PM responds, continue the dialogue (one question at a time) until you 
 - What the signal suggests is broken or missing
 - Why it matters (impact or opportunity)
 
-When you have enough, say: "I think we have enough to surface some framings. Type `/pm-frame` when ready."
+---
+
+**When the picture is clear enough to frame:**
+
+Before suggesting `/pm-frame`, do the following:
+
+1. Ask: "Give this a working name — 2–3 words in kebab-case (e.g., `checkout-abandonment`, `search-empty-states`). You can refine it later in `/pm-commit`."
+
+2. Once the PM provides a name, write `features/[working-name]/signal.md` with this exact structure:
+
+```markdown
+# [Working Name] — Signal
+
+**Captured:** [today's date]
+**Signal type:** [complaint / metric drop / idea / observation / competitive / stakeholder request / other]
+
+---
+
+## Raw Signal
+
+[The original signal as provided by the PM, verbatim or close to it]
+
+---
+
+## Clarified Picture
+
+- **Who is affected:** [specific segment — not "users"]
+- **What they're experiencing:** [the behavior, friction, or symptom]
+- **What's broken or missing:** [the root insight from the dialogue]
+- **Why it matters:** [impact or opportunity — quantified if possible]
+
+---
+
+## Key Quotes / Data Points
+
+[Any specific numbers, quotes, or evidence surfaced during the dialogue — or "None captured"]
+```
+
+3. After writing the file, say:
+
+"Signal saved to `features/[working-name]/signal.md`.
+
+Type `/pm-frame [working-name]` to surface 2–3 problem framings."

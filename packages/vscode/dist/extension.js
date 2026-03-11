@@ -45,6 +45,9 @@ const SpecCodeLensProvider_1 = require("./codelens/SpecCodeLensProvider");
 const AgentBriefLauncher_1 = require("./launcher/AgentBriefLauncher");
 const SpecPreviewPanel_1 = require("./preview/SpecPreviewPanel");
 const InitWizard_1 = require("./wizard/InitWizard");
+const ContextHealthPanel_1 = require("./panel/ContextHealthPanel");
+const SignalInboxPanel_1 = require("./panel/SignalInboxPanel");
+const PipelineDashboard_1 = require("./panel/PipelineDashboard");
 const AGENT_BRIEF_SELECTOR = {
     scheme: 'file',
     pattern: '**/agent-brief.md',
@@ -84,6 +87,15 @@ function activate(context) {
     context.subscriptions.push(vscode.languages.registerCodeLensProvider(AGENT_BRIEF_SELECTOR, new SpecCodeLensProvider_1.SpecCodeLensProvider()));
     // --- Quick fixes ---
     context.subscriptions.push(vscode.languages.registerCodeActionsProvider(AGENT_BRIEF_SELECTOR, new QuickFixProvider_1.QuickFixProvider(), { providedCodeActionKinds: [vscode.CodeActionKind.QuickFix] }));
+    // --- Sidebar: Context Health ---
+    const contextHealthPanel = new ContextHealthPanel_1.ContextHealthPanel();
+    context.subscriptions.push(vscode.window.registerTreeDataProvider('prodmanContextHealth', contextHealthPanel));
+    // --- Sidebar: Signal Inbox ---
+    const signalInboxPanel = new SignalInboxPanel_1.SignalInboxPanel();
+    context.subscriptions.push(vscode.window.registerTreeDataProvider('prodmanSignalInbox', signalInboxPanel));
+    // --- Sidebar: Pipeline Dashboard ---
+    const pipelineDashboard = new PipelineDashboard_1.PipelineDashboard();
+    context.subscriptions.push(vscode.window.registerWebviewViewProvider(PipelineDashboard_1.PipelineDashboard.viewType, pipelineDashboard));
     // --- Commands ---
     context.subscriptions.push(vscode.commands.registerCommand('prodman.launchAgent', async () => {
         const doc = activeAgentBriefDocument();
@@ -114,8 +126,15 @@ function activate(context) {
         if (!signal)
             return;
         await appendSignal(signal);
+        signalInboxPanel.refresh();
     }), vscode.commands.registerCommand('prodman.initWorkspace', async () => {
-        await InitWizard_1.InitWizard.run();
+        await InitWizard_1.InitWizard.run(context.extensionUri);
+    }), vscode.commands.registerCommand('prodman.refreshContextHealth', () => {
+        contextHealthPanel.refresh();
+    }), vscode.commands.registerCommand('prodman.refreshSignalInbox', () => {
+        signalInboxPanel.refresh();
+    }), vscode.commands.registerCommand('prodman.refreshPipeline', () => {
+        pipelineDashboard.refresh();
     }));
     // --- Init Wizard: auto-prompt on startup if no context detected ---
     checkAndPromptInit();

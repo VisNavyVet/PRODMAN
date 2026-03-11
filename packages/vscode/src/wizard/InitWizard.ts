@@ -2,74 +2,138 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
 import { AGENT_BRIEF_SCAFFOLD } from '@prodman/core'
+import { TechDetector } from '../detector/TechDetector'
 
-const CONTEXT_TEMPLATES: Record<string, string> = {
-  'product.md': `# Product
+/**
+ * Fallback templates used when bundled templates/context/ files cannot be read.
+ * Keep in sync with packages/vscode/templates/context/.
+ */
+const FALLBACK_TEMPLATES: Record<string, string> = {
+  'product.md': `# Product Context
 
-## What it is
+## What We Build
 
-[One paragraph description of your product]
 
-## Problem it solves
+## Positioning
 
-[The core user problem this product addresses]
 
-## How it works
+## Core Value Proposition
 
-[Brief description of the product experience]
+
+## Current Stage
+
+
+## Key Metrics
+- Primary:
+- Secondary:
+- Retention / engagement:
+
+
+## Tech Stack (brief)
+
 `,
 
-  'users.md': `# Users
+  'users.md': `# User Segments
 
-## Primary Segment
+## Segment 1: [Name]
 
-**Name:** [Segment name]
-**Description:** [Who they are and what they do]
-**Key goal:** [What they want to achieve with your product]
+- **Who they are:**
+- **What they're trying to do:**
+- **Where they struggle today:**
+- **What success looks like for them:**
+- **Usage pattern:**
+- **Size / importance:**
 
-## Secondary Segment
 
-**Name:** [Segment name]
-**Description:** [Who they are and what they do]
-**Key goal:** [What they want to achieve with your product]
+## Who We're NOT Building For
+
 `,
 
   'constraints.md': `# Constraints
 
-## Technical
+## Technical Constraints
 
 - **Stack:** [Languages, frameworks, platforms]
 - **Infrastructure:** [Cloud provider, hosting environment]
 - **Performance:** [Latency, throughput, or size constraints]
 
-## Compliance & Legal
+## Legal / Compliance
 
-- [Any regulatory or legal requirements, or None]
 
-## Accessibility
+## Organizational Constraints
 
-- [Standard to meet, e.g. WCAG 2.1 AA, or None]
 
-## Team & Process
+## Explicit Non-Starters
 
-- [Headcount, pace, or process constraints]
 `,
 
-  'history.md': `# Decision History
+  'history.md': `# Product History & Decisions
 
-This file accumulates key decisions and retrospective learnings.
-Each entry is added automatically by /pm-retro or manually.
+## Features Shipped
 
----
+| Feature | Date | Outcome | Key Learning |
+|---------|------|---------|-------------|
+
+## Things We Tried That Didn't Work
+
+## Active Strategic Bets
+
+1.
+2.
+
+## Explicitly Ruled Out
+
+| Idea | Why ruled out | Condition to revisit |
+|------|--------------|---------------------|
+
+## Open Strategic Questions
+
+-
 `,
+}
+
+/**
+ * Read a bundled context template from the extension package.
+ * Falls back to FALLBACK_TEMPLATES if the file cannot be read.
+ */
+function readBundledTemplate(extensionUri: vscode.Uri, filename: string): string {
+  try {
+    const templateUri = vscode.Uri.joinPath(extensionUri, 'templates', 'context', filename)
+    return fs.readFileSync(templateUri.fsPath, 'utf8')
+  } catch {
+    return FALLBACK_TEMPLATES[filename] ?? `# ${filename}\n\n`
+  }
+}
+
+/**
+ * Inject detected tech stack into a constraints.md template.
+ * Handles both the rich (repo) template format and the simple fallback format.
+ */
+function injectStack(content: string, stackSummary: string): string {
+  if (!stackSummary) return content
+
+  // Handle simple "- **Stack:** [...]" format (fallback template)
+  if (content.includes('- **Stack:** [Languages, frameworks, platforms]')) {
+    return content.replace(
+      '- **Stack:** [Languages, frameworks, platforms]',
+      `- **Stack:** ${stackSummary}`
+    )
+  }
+
+  // Handle rich template: inject after ## Technical Constraints heading
+  return content.replace(
+    /(##\s+Technical(?:\s+Constraints)?\s*\n)/i,
+    `$1\n- **Stack:** ${stackSummary}\n`
+  )
 }
 
 /**
  * Multi-step wizard to initialize a PRODMAN workspace.
  * Generates identical output to /pm-import in the Claude Code CLI.
+ * Reads templates from the bundled templates/context/ directory.
  */
 export class InitWizard {
-  static async run(): Promise<void> {
+  static async run(extensionUri: vscode.Uri): Promise<void> {
     const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
     if (!workspaceRoot) {
       vscode.window.showErrorMessage('ProdMan: No workspace folder open.')
@@ -87,14 +151,21 @@ export class InitWizard {
     )
     if (confirm !== 'Initialize') return
 
-    // Step 2: create context files
+    // Step 2: create context files — read from bundled templates, pre-fill detected stack
     fs.mkdirSync(contextDir, { recursive: true })
     fs.mkdirSync(featuresDir, { recursive: true })
 
+    const tech = TechDetector.detect(workspaceRoot)
+    const filenames = ['product.md', 'users.md', 'constraints.md', 'history.md']
+
     const created: string[] = []
-    for (const [filename, content] of Object.entries(CONTEXT_TEMPLATES)) {
+    for (const filename of filenames) {
       const filePath = path.join(contextDir, filename)
       if (!fs.existsSync(filePath)) {
+        let content = readBundledTemplate(extensionUri, filename)
+        if (filename === 'constraints.md' && tech.stackSummary) {
+          content = injectStack(content, tech.stackSummary)
+        }
         fs.writeFileSync(filePath, content)
         created.push(`prodman-context/${filename}`)
       }
@@ -150,21 +221,41 @@ export class InitWizard {
 
     fs.mkdirSync(featureDir, { recursive: true })
 
-    const scaffold = AGENT_BRIEF_SCAFFOLD.replace(
+    const featureTitle = featureName
+      .split('-')
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' ')
+
+    let scaffold = AGENT_BRIEF_SCAFFOLD.replace(
       '# Agent Brief: [Feature Title]',
-      `# Agent Brief: ${featureName
-        .split('-')
-        .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(' ')}`
+      `# Agent Brief: ${featureTitle}`
     )
+
+    // Pre-fill detected tech values — reduce LNT-012 errors on first open
+    const tech = TechDetector.detect(workspaceRoot)
+    if (tech.repo) {
+      scaffold = scaffold.replace(
+        /\*\*Repository:\*\* \[repo name or path\]/,
+        `**Repository:** \`${tech.repo}\``
+      )
+    }
+    if (tech.stackSummary) {
+      scaffold = scaffold.replace(
+        /\*\*Tech stack:\*\* \[Languages, frameworks, relevant versions\]/,
+        `**Tech stack:** ${tech.stackSummary}`
+      )
+    }
 
     fs.writeFileSync(briefPath, scaffold)
 
     const briefUri = vscode.Uri.file(briefPath)
     await vscode.window.showTextDocument(briefUri)
 
+    const techNote = tech.stackSummary
+      ? ` Stack pre-filled: ${tech.stackSummary}.`
+      : ''
     vscode.window.showInformationMessage(
-      `ProdMan: features/${featureName}/agent-brief.md created — lint diagnostics will guide you.`
+      `ProdMan: features/${featureName}/agent-brief.md created.${techNote} Fill in remaining fields to reach agent-ready.`
     )
   }
 }

@@ -8,6 +8,9 @@ import { SpecCodeLensProvider } from './codelens/SpecCodeLensProvider'
 import { AgentBriefLauncher } from './launcher/AgentBriefLauncher'
 import { SpecPreviewPanel } from './preview/SpecPreviewPanel'
 import { InitWizard } from './wizard/InitWizard'
+import { ContextHealthPanel } from './panel/ContextHealthPanel'
+import { SignalInboxPanel } from './panel/SignalInboxPanel'
+import { PipelineDashboard } from './panel/PipelineDashboard'
 
 const AGENT_BRIEF_SELECTOR: vscode.DocumentSelector = {
   scheme: 'file',
@@ -72,6 +75,24 @@ export function activate(context: vscode.ExtensionContext): void {
     )
   )
 
+  // --- Sidebar: Context Health ---
+  const contextHealthPanel = new ContextHealthPanel()
+  context.subscriptions.push(
+    vscode.window.registerTreeDataProvider('prodmanContextHealth', contextHealthPanel)
+  )
+
+  // --- Sidebar: Signal Inbox ---
+  const signalInboxPanel = new SignalInboxPanel()
+  context.subscriptions.push(
+    vscode.window.registerTreeDataProvider('prodmanSignalInbox', signalInboxPanel)
+  )
+
+  // --- Sidebar: Pipeline Dashboard ---
+  const pipelineDashboard = new PipelineDashboard()
+  context.subscriptions.push(
+    vscode.window.registerWebviewViewProvider(PipelineDashboard.viewType, pipelineDashboard)
+  )
+
   // --- Commands ---
   context.subscriptions.push(
     vscode.commands.registerCommand('prodman.launchAgent', async () => {
@@ -108,10 +129,23 @@ export function activate(context: vscode.ExtensionContext): void {
       })
       if (!signal) return
       await appendSignal(signal)
+      signalInboxPanel.refresh()
     }),
 
     vscode.commands.registerCommand('prodman.initWorkspace', async () => {
-      await InitWizard.run()
+      await InitWizard.run(context.extensionUri)
+    }),
+
+    vscode.commands.registerCommand('prodman.refreshContextHealth', () => {
+      contextHealthPanel.refresh()
+    }),
+
+    vscode.commands.registerCommand('prodman.refreshSignalInbox', () => {
+      signalInboxPanel.refresh()
+    }),
+
+    vscode.commands.registerCommand('prodman.refreshPipeline', () => {
+      pipelineDashboard.refresh()
     })
   )
 

@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { SECTION_TEMPLATES } from '@prodman/core'
+import { TechDetector } from '../detector/TechDetector'
 
 /**
  * Maps lint rule IDs to the section template they can insert.
@@ -17,6 +18,9 @@ const RULE_TO_SECTION: Record<string, string> = {
   'LNT-010': 'definition of done',
   'LNT-011': 'escalation triggers',
 }
+
+/** Matches **Label:** [placeholder text] — same pattern as LNT012 */
+const LABELED_PLACEHOLDER = /\*\*[^:*]+:\*\*\s*\[[^\]]{3,}\]\s*$/
 
 export class QuickFixProvider implements vscode.CodeActionProvider {
   provideCodeActions(
@@ -75,6 +79,11 @@ export class QuickFixProvider implements vscode.CodeActionProvider {
       return [] // No safe auto-fix for vague language
     }
 
+    // LNT-012: unfilled technical context — fill from workspace
+    if (ruleId === 'LNT-012') {
+      return this.fixTechContextPlaceholders(document, diagnostic)
+    }
+
     // Generic: insert section template at end of file
     const sectionKey = RULE_TO_SECTION[ruleId]
     if (sectionKey && SECTION_TEMPLATES[sectionKey]) {
@@ -82,6 +91,48 @@ export class QuickFixProvider implements vscode.CodeActionProvider {
     }
 
     return []
+  }
+
+  private fixTechContextPlaceholders(
+    document: vscode.TextDocument,
+    diagnostic: vscode.Diagnostic
+  ): vscode.CodeAction[] {
+    const workspaceRoot = vscode.workspace.getWorkspaceFolder(document.uri)?.uri.fsPath
+    if (!workspaceRoot) return []
+
+    const { repo, stackSummary } = TechDetector.detect(workspaceRoot)
+    if (!repo && !stackSummary) return []
+
+    const action = new vscode.CodeAction(
+      'Fill Technical Context from workspace',
+      vscode.CodeActionKind.QuickFix
+    )
+    action.diagnostics = [diagnostic]
+    action.edit = new vscode.WorkspaceEdit()
+    action.isPreferred = true
+
+    for (let i = 0; i < document.lineCount; i++) {
+      const lineText = document.lineAt(i).text
+      if (!LABELED_PLACEHOLDER.test(lineText)) continue
+
+      let replacement: string | null = null
+
+      if (/\*\*Repository:\*\*/i.test(lineText) && repo) {
+        replacement = lineText.replace(/\[[^\]]+\]\s*$/, `\`${repo}\``)
+      } else if (/\*\*Tech stack:\*\*/i.test(lineText) && stackSummary) {
+        replacement = lineText.replace(/\[[^\]]+\]\s*$/, stackSummary)
+      }
+
+      if (replacement !== null) {
+        const range = new vscode.Range(
+          new vscode.Position(i, 0),
+          new vscode.Position(i, lineText.length)
+        )
+        action.edit.replace(document.uri, range, replacement)
+      }
+    }
+
+    return [action]
   }
 
   private fixMissingSection(

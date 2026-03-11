@@ -130,6 +130,55 @@ describe('Individual rule: LNT-011 (EscalationTriggers)', () => {
   })
 })
 
+describe('Individual rule: LNT-012 (TechContextFilled)', () => {
+  const linter = new Linter()
+
+  it('fires on labeled placeholder: **Repository:** [repo name or path]', () => {
+    const content = `## Technical context\n- **Repository:** [repo name or path]\n- **Tech stack:** React 18`
+    const result = linter.lintContent('agent-brief.md', content)
+    expect(result.diagnostics.some(d => d.rule === 'LNT-012')).toBe(true)
+    expect(result.diagnostics.find(d => d.rule === 'LNT-012')?.severity).toBe('error')
+  })
+
+  it('fires on labeled placeholder: **Tech stack:** [Languages, frameworks, relevant versions]', () => {
+    const content = `## Technical context\n- **Repository:** my-app\n- **Tech stack:** [Languages, frameworks, relevant versions]`
+    const result = linter.lintContent('agent-brief.md', content)
+    expect(result.diagnostics.some(d => d.rule === 'LNT-012')).toBe(true)
+  })
+
+  it('fires on multiple unfilled placeholders — reports first occurrence', () => {
+    const content = `## Technical context\n- **Repository:** [repo name or path]\n- **Tech stack:** [Languages, frameworks, relevant versions]`
+    const result = linter.lintContent('agent-brief.md', content)
+    const lnt012 = result.diagnostics.filter(d => d.rule === 'LNT-012')
+    expect(lnt012).toHaveLength(1)
+  })
+
+  it('does not fire when technical context is filled in', () => {
+    const content = `## Technical context\n- **Repository:** marketplace-web\n- **Tech stack:** React 18, TypeScript 5`
+    const result = linter.lintContent('agent-brief.md', content)
+    expect(result.diagnostics.some(d => d.rule === 'LNT-012')).toBe(false)
+  })
+
+  it('does not fire when section is missing (LNT-001 handles it)', () => {
+    const content = `## Task Summary\nDo something useful here`
+    const result = linter.lintContent('agent-brief.md', content)
+    expect(result.diagnostics.some(d => d.rule === 'LNT-012')).toBe(false)
+  })
+
+  it('does not fire on checkbox items like - [ ] or - [x]', () => {
+    const content = `## Technical context\n- **Repository:** my-app\n- [ ] Verify stack\n- [x] Done`
+    const result = linter.lintContent('agent-brief.md', content)
+    expect(result.diagnostics.some(d => d.rule === 'LNT-012')).toBe(false)
+  })
+
+  it('returns incomplete for the unfilled-tech-context fixture', () => {
+    const filePath = path.join(FIXTURES, 'unfilled-tech-context', 'agent-brief.md')
+    const result = linter.lintFile(filePath)
+    expect(result.readiness).toBe('incomplete')
+    expect(result.diagnostics.some(d => d.rule === 'LNT-012')).toBe(true)
+  })
+})
+
 describe('Linter.featureReadiness', () => {
   const linter = new Linter()
 

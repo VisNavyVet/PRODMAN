@@ -36,6 +36,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.QuickFixProvider = void 0;
 const vscode = __importStar(require("vscode"));
 const core_1 = require("@prodman/core");
+const TechDetector_1 = require("../detector/TechDetector");
 /**
  * Maps lint rule IDs to the section template they can insert.
  * When a quick fix is triggered on a diagnostic, we look up the rule,
@@ -52,6 +53,8 @@ const RULE_TO_SECTION = {
     'LNT-010': 'definition of done',
     'LNT-011': 'escalation triggers',
 };
+/** Matches **Label:** [placeholder text] — same pattern as LNT012 */
+const LABELED_PLACEHOLDER = /\*\*[^:*]+:\*\*\s*\[[^\]]{3,}\]\s*$/;
 class QuickFixProvider {
     provideCodeActions(document, _range, context) {
         const actions = [];
@@ -93,12 +96,45 @@ class QuickFixProvider {
         if (ruleId === 'LNT-009') {
             return []; // No safe auto-fix for vague language
         }
+        // LNT-012: unfilled technical context — fill from workspace
+        if (ruleId === 'LNT-012') {
+            return this.fixTechContextPlaceholders(document, diagnostic);
+        }
         // Generic: insert section template at end of file
         const sectionKey = RULE_TO_SECTION[ruleId];
         if (sectionKey && core_1.SECTION_TEMPLATES[sectionKey]) {
             return [this.insertSectionAtEnd(document, diagnostic, sectionKey)];
         }
         return [];
+    }
+    fixTechContextPlaceholders(document, diagnostic) {
+        const workspaceRoot = vscode.workspace.getWorkspaceFolder(document.uri)?.uri.fsPath;
+        if (!workspaceRoot)
+            return [];
+        const { repo, stackSummary } = TechDetector_1.TechDetector.detect(workspaceRoot);
+        if (!repo && !stackSummary)
+            return [];
+        const action = new vscode.CodeAction('Fill Technical Context from workspace', vscode.CodeActionKind.QuickFix);
+        action.diagnostics = [diagnostic];
+        action.edit = new vscode.WorkspaceEdit();
+        action.isPreferred = true;
+        for (let i = 0; i < document.lineCount; i++) {
+            const lineText = document.lineAt(i).text;
+            if (!LABELED_PLACEHOLDER.test(lineText))
+                continue;
+            let replacement = null;
+            if (/\*\*Repository:\*\*/i.test(lineText) && repo) {
+                replacement = lineText.replace(/\[[^\]]+\]\s*$/, `\`${repo}\``);
+            }
+            else if (/\*\*Tech stack:\*\*/i.test(lineText) && stackSummary) {
+                replacement = lineText.replace(/\[[^\]]+\]\s*$/, stackSummary);
+            }
+            if (replacement !== null) {
+                const range = new vscode.Range(new vscode.Position(i, 0), new vscode.Position(i, lineText.length));
+                action.edit.replace(document.uri, range, replacement);
+            }
+        }
+        return [action];
     }
     fixMissingSection(document, diagnostic) {
         // Message format: "Missing required section: ..."
