@@ -178,6 +178,24 @@ All three items shipped:
 
 ---
 
+### Spec Intelligence
+
+**[BL-16] Spec Coverage Score**
+A numeric coverage score (0–100) added to `CompiledSpec` reflecting how *complete* a brief is, independent of lint validity. A brief can pass all 12 rules with 2 acceptance criteria — coverage penalizes thin specs. Displayed alongside readiness in the status bar. New lint rule LNT-013 warns if coverage < 60%.
+
+Scoring dimensions: AC count (5–10 target), edge cases (3+ target), constraints filled (non-placeholder), escalation triggers present, out-of-scope items present.
+
+**Touches:** `SpecMapper.ts` (scoring logic + new field), `compiled-spec-schema.json` (new field), `SpecReadinessBar.ts` (display), LNT-013 (new warning rule).
+
+---
+
+**[BL-17] Signals → Feature Suggestions**
+Closes the discovery-to-execution loop. Captured signals in `prodman-context/signals.md` currently have no downstream action — they're an append log with no consumer. A "Create brief from signal" action in Signal Inbox generates a draft `agent-brief.md` with Task Summary pre-filled from the signal, Product Context pulled from `product.md`, and Technical Context auto-populated by TechDetector. Opens immediately with linter active to guide completion.
+
+**Touches:** `SignalInboxPanel.ts` (new tree item action), `extension.ts` (new `prodman.createBriefFromSignal` command), `package.json` (command registration). Reuses existing `createFeatureBrief()` in `InitWizard.ts` with signal pre-fill.
+
+---
+
 ## v1.0 — Platform Play
 
 ### compiled-spec.json as Emerging Standard
@@ -211,4 +229,4 @@ Structured log where PMs record what the agent asked for / got wrong / needed cl
 
 ---
 
-*Last updated: 2026-03-10. BL-06, BL-08 confirmed already shipped; BL-12 (handoff-response.md + Team Setup) shipped. BL-09 (Zone 1 persistence), BL-10 (TechDetector), BL-11 (LNT012) shipped in v0.3 Phase 1+2 work.*
+*Last updated: 2026-03-11. BL-06, BL-08 confirmed already shipped; BL-12 (handoff-response.md + Team Setup) shipped. BL-09 (Zone 1 persistence), BL-10 (TechDetector), BL-11 (LNT012) shipped in v0.3 Phase 1+2 work. BL-16 (Spec Coverage Score) and BL-17 (Signals → Feature Suggestions) added as v0.4 Spec Intelligence.*

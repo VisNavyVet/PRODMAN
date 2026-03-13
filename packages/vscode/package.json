@@ -1,11 +1,14 @@
 {
-  "name": "@prodman/vscode",
+  "name": "prodman",
   "displayName": "ProdMan",
   "description": "AI-ready spec linting and agent brief launcher for VS Code",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "publisher": "prodman",
-  "private": true,
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prodman/prodman"
+  },
   "engines": {
     "vscode": "^1.85.0",
     "node": ">=18.0.0"
@@ -161,11 +164,13 @@
     }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "build:watch": "tsc -p tsconfig.json --watch",
+    "build": "node scripts/build.js",
+    "build:watch": "node scripts/build.js --watch",
     "clean": "rimraf dist",
     "lint": "tsc --noEmit",
-    "test": "echo \"No vscode tests yet\" && exit 0"
+    "test": "echo \"No vscode tests yet\" && exit 0",
+    "package": "npm run build && vsce package --no-dependencies",
+    "publish": "npm run build && vsce publish --no-dependencies"
   },
   "dependencies": {
     "@prodman/core": "^0.1.0"
@@ -173,6 +178,8 @@
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.0.0",
+    "esbuild": "^0.25.0",
     "typescript": "^5.4.0",
     "rimraf": "^5.0.0"
   }

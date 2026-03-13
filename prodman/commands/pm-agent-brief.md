@@ -1,5 +1,11 @@
 Load all files in `prodman-context/`. Load `features/[feature-name]/prd.md`, `approach.md`, and `handoff-eng.md` if they exist.
 
+> **How to provide your PRD:**
+> - **Best:** Attach your PRD file directly to this chat (PDF, Markdown, Word doc, Notion export). ProdMan will extract structure from the attached content.
+> - **Alternative:** Paste your PRD text directly into the chat after running this command.
+> - If `$ARGUMENTS` contains a feature name, use it as-is. Otherwise derive a kebab-case feature name from the PRD title.
+> - If no PRD is attached or pasted, ask: "Please attach your PRD file or paste the content here — I'll convert it into a validated agent brief."
+
 > **When to use this command:**
 > Use `/pm-agent-brief` when (a) you have existing docs from outside ProdMan and need an agent brief without running `/pm-ff`, or (b) you need to regenerate the brief after engineering handoff (`handoff-eng.md`) has been updated with new technical decisions. If you ran `/pm-ff` and it already generated `agent-brief.md`, you do not need this command unless something has changed.
 

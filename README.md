@@ -4,7 +4,7 @@
 [![AI Agnostic](https://img.shields.io/badge/AI-Agnostic-green)](integrations/universal.md)
 [![Works with Claude Code](https://img.shields.io/badge/Works%20with-Claude%20Code-blue)](https://claude.ai/code)
 [![Works with Cursor](https://img.shields.io/badge/Works%20with-Cursor-black)](https://cursor.sh)
-[![Version](https://img.shields.io/badge/version-0.3.0-brightgreen)]()
+[![Version](https://img.shields.io/badge/version-0.3.1-brightgreen)]()
 [![npm @prodman/cli](https://img.shields.io/badge/npm-%40prodman%2Fcli-red)](https://www.npmjs.com/package/@prodman/cli)
 [![VS Code Extension](https://img.shields.io/badge/VS%20Code-%40prodman%2Fvscode-007ACC)](packages/vscode)
 
@@ -28,6 +28,18 @@ You're building with AI agents. Your workflow looks like this:
 **The problem isn't AI capability. It's that nothing connects.**
 
 ProdMan connects it.
+
+---
+
+## Why Not Just Use Notion or ChatGPT?
+
+You can. But three things break at scale:
+
+**1. Memory loss.** Every new session starts cold. You re-explain your product, your users, your constraints. The AI gives generic advice. ProdMan loads `prodman-context/` before every command — the AI already knows your product before you type.
+
+**2. Agent handoff risk.** Pasting a Notion PRD into Claude Code works until the agent overengineers, misses scope, or makes silent decisions it shouldn't. An `agent-brief.md` gives the agent bounded scope, explicit must-NOT-do lists, and escalation triggers — so it knows when to stop and ask.
+
+**3. Audience rewrites.** You write one spec, then manually rewrite it for engineers, designers, and execs. ProdMan generates 5 audience-ready views from one source on demand.
 
 ---
 
@@ -68,55 +80,93 @@ git clone https://github.com/VisNavyVet/PRODMAN.git
 cd PRODMAN
 ```
 
-**Which path is right for you?**
-
-| Situation | Start here |
-|-----------|-----------|
-| Starting a new feature from scratch | Step 1 → Zone 1 below |
-| Already have a PRD, ticket, or existing spec | [`/pm-agent-brief`](#fast-path--existing-docs) — skip to an agent-ready brief in minutes |
-| Want to validate assumptions before speccing | [`/pm-research`](prodman/commands/pm-research.md) |
+Both paths below end at the same place: a validated `agent-brief.md` that passes all 12 lint rules, ready for any AI coding agent.
 
 ---
 
-**Step 1 — Bootstrap your product context (once)**
+### Path A — Starting from a signal
+
+**Who:** Technical founders, PMs with a fuzzy problem that needs thinking through.
+**Time:** 2–3 short sessions. **Commands:** 5.
 
 ```
-/pm-import
+Step 0  /pm-import          Bootstrap product memory once
+        ↓
+Step 1  /pm-signal          Drop raw signal → ProdMan asks one question at a time
+        ↓                   Writes features/[name]/signal.md
+Step 2  /pm-frame           3 framings to react against
+        /pm-explore         6-dimension deep-dive — both persist across sessions
+        ↓
+Step 3  /pm-commit          Lock direction → writes commitment.md
+        ↓
+Step 4  /pm-ff              Full spec bundle: brief + PRD + approach + plan + agent-brief.md
+        ↓
+        Fix lint errors → status bar shows ✓ 12/12 → launch agent
 ```
 
-ProdMan asks 5 targeted questions. Have existing docs? Paste them to skip ahead.
-
-```
-prodman-context/
-├── product.md       ← what your product is
-├── users.md         ← who your users are (specific segments, not "users")
-├── constraints.md   ← tech, legal, org constraints
-└── history.md       ← decisions + retro learnings — grows automatically
-```
-
-**Step 2 — Run your first signal**
-
-```
-/pm-signal Customer support is seeing a spike in "can't find past orders" tickets
-```
-
-ProdMan won't write a spec. It'll ask you one question first. When the dialogue is complete, it'll ask for a working feature name and write `features/[name]/signal.md` — so your thinking persists even if you close the session.
-
-**In any other AI tool:** Open `prodman/commands/pm-signal.md`, paste it into your chat, then add your signal.
+**Start here:** `/pm-signal [your signal]`
 
 ---
 
-### Fast Path — Existing Docs
+### Path B — Already have a PRD ⚡
 
-Already have a PRD, Jira ticket, Notion doc, or rough spec? Skip Zone 1 entirely.
+**Who:** Any PM with an existing PRD from Claude, ChatGPT, Notion, Jira, Linear, or rough notes.
+**Time:** ~15 minutes. **Commands:** 1.
 
 ```
-/pm-agent-brief [feature-name]
+Step 0  /pm-import          Bootstrap product memory once (paste existing docs to skip)
+        ↓
+Step 1  /pm-agent-brief     Paste your PRD → ProdMan extracts scope, requirements, AC
+                            Fills gaps through targeted questions only
+        ↓
+Step 2  Fix lint errors      Red squiggles show what's missing → Quick Fix inserts templates
+        ↓
+        Status bar shows ✓ 12/12 → launch agent
 ```
 
-Paste your existing docs when prompted. ProdMan generates a validated, agent-ready `agent-brief.md` directly. Use this when:
-- You have docs from outside ProdMan and need an agent brief fast
-- You've updated `handoff-eng.md` with new technical decisions and need to regenerate the brief
+PRDs are written for humans. Agent briefs are written for agents. `/pm-agent-brief` converts between the two.
+
+**Start here:** `/pm-agent-brief [feature-name]` — then paste your PRD when prompted.
+
+**Works with:** Claude/ChatGPT output · Notion · Jira · Linear · Google Docs · rough notes
+
+---
+
+## What Success Looks Like
+
+After running `/pm-ff`, your feature folder looks like this:
+
+```
+features/checkout-v2/
+├── agent-brief.md ★     ← ready for your coding agent
+├── prd.md
+├── brief.md
+└── ...
+```
+
+Your status bar shows:
+
+```
+PRODMAN ✓ Agent Ready — 12/12 rules passing
+```
+
+And a snippet of your `agent-brief.md`:
+
+```markdown
+## In Scope
+- Guest checkout flow (no account required)
+- Save card option (opt-in only)
+
+## Must NOT Do
+- Do not modify the existing logged-in checkout path
+- Do not add upsell prompts
+
+## Escalation Triggers
+- Stop if payment provider API returns undocumented errors
+- Stop if cart total exceeds $10,000 (fraud risk — escalate to PM)
+```
+
+That's what the agent receives. Bounded. Testable. No guessing.
 
 ---
 
@@ -437,8 +487,8 @@ Use the template at [`templates/features/handoff-response.md`](templates/feature
 | **v0.1.0 (Drop 1)** | **`@prodman/core` + `@prodman/cli` + GitHub Action + 12 lint rules + spec compiler** | **✓ Done** |
 | **v0.2 (Drop 2)** | **`@prodman/vscode` — spec linter, readiness bar, agent brief launcher, CodeLens actions, quick fixes, init wizard, spec preview** | **✓ Done** |
 | **v0.3** | **VS Code sidebar — context health + drift detection, signal inbox, pipeline dashboard · LNT-012 · Marketplace packaging** | **✓ Done** |
-| v0.4 | MCP integration — zero-friction agent handoff from Claude Code | Planned |
-| v0.5 | Live integrations — Linear/Jira push, team context sharing | Planned |
+| v0.4 | MCP integration — zero-friction agent handoff from Claude Code | Q2 2026 |
+| v0.5 | Live integrations — Linear/Jira push, team context sharing | Q3 2026 |
 
 ---
 
@@ -448,6 +498,25 @@ Use the template at [`templates/features/handoff-response.md`](templates/feature
 - [Cursor](integrations/cursor.md) — Rules file + command workflow
 - [Claude Projects](integrations/claude-projects.md) — Project instructions + file uploads
 - [Universal (any AI tool)](integrations/universal.md) — Copy-paste workflow for any interface
+
+---
+
+## FAQ
+
+**Can I use ProdMan without VS Code?**
+Yes. All commands are plain Markdown — copy any command from `.claude/commands/` and paste it into Claude, ChatGPT, Gemini, or any AI tool. The VS Code extension adds linting and inline tooling on top, but isn't required.
+
+**Does this work with Cursor / Copilot / other AI tools?**
+Yes. See the [integration guides](#integration-guides) below. ProdMan is AI-agnostic by design — it produces clean Markdown that works anywhere.
+
+**Is `prodman-context/` committed to git?**
+Up to you. For product teams, commit it — everyone shares the same product memory. For solo projects or sensitive context (unreleased strategy, pricing), add it to `.gitignore`.
+
+**My context is growing large. How do I manage it?**
+Trim `history.md` to the last 6–12 months of decisions. Keep `product.md` and `users.md` tight — they should be 1-page each. The context files are meant to be curated, not append-only logs.
+
+**What if my agent still overscopes despite AC + escalation triggers?**
+Check your `anti_requirements` and `escalation_triggers` fields in `agent-brief.md` — they're likely too vague. Run `prodman validate [feature]` to catch issues. Specific beats general: "Do not modify the logged-in checkout path" is better than "Don't change unrelated flows."
 
 ---
 

@@ -597,6 +597,36 @@
     line-height: 1.5;
   }
 
+  /* ── EXAMPLE BLOCKS ── */
+  .cmd-example { margin-top: 10px; }
+  .cmd-example summary {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .cmd-example summary::before { content: '▶'; font-size: 8px; transition: transform 0.15s; }
+  .cmd-example[open] summary::before { transform: rotate(90deg); }
+  .cmd-example pre {
+    margin-top: 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 10px;
+    color: var(--muted2);
+    line-height: 1.7;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
   /* ── RETRO LOOP ── */
   .retro-loop {
     background: var(--surface);
@@ -761,6 +791,7 @@
   <a href="#story">Story</a>
   <span class="nav-sep">|</span>
   <a href="#flow">Flow</a>
+  <a href="#paths">Paths</a>
   <span class="nav-sep">|</span>
   <a href="#utility">Setup</a>
   <a href="#zone1">Zone 1</a>
@@ -788,6 +819,10 @@
       <span class="badge badge-amber">Agent-First Output</span>
       <span class="badge badge-green">@prodman/cli on npm</span>
       <span class="badge badge-blue">VS Code Extension</span>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+      <a href="https://github.com/VisNavyVet/PRODMAN" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);color:var(--text);text-decoration:none;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;transition:border-color 0.15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">⭐ GitHub</a>
+      <a href="https://marketplace.visualstudio.com/items?itemName=prodman.prodman" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:rgba(107,127,255,0.1);border:1px solid rgba(107,127,255,0.3);color:var(--accent);text-decoration:none;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;transition:border-color 0.15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(107,127,255,0.3)'">↓ Install VS Code Extension</a>
     </div>
   </div>
   <div class="legend">
@@ -840,6 +875,13 @@
 <!-- ── END-TO-END FLOW ── -->
 <div id="flow" class="full-flow">
   <div class="full-flow-title">End-to-end flow</div>
+
+  <!-- PATH A label -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:0 4px">
+    <span style="font-size:10px;font-weight:700;color:var(--z1);text-transform:uppercase;letter-spacing:.08em;background:rgba(107,127,255,0.1);border:1px solid rgba(107,127,255,0.3);border-radius:4px;padding:2px 8px">Path A — From a signal</span>
+    <span style="font-size:10px;color:var(--muted)">2–3 sessions · complex or high-stakes</span>
+  </div>
+
   <div class="flow-steps">
     <div class="flow-step">
       <div class="flow-step-node" style="color:var(--zu);border-color:var(--zu);background:rgba(100,116,139,0.1)">⚙</div>
@@ -907,6 +949,57 @@
       <div class="flow-step-cmd">next feature smarter</div>
     </div>
   </div>
+
+  <!-- PATH B label -->
+  <div style="display:flex;align-items:center;gap:10px;margin-top:24px;margin-bottom:10px;padding:0 4px">
+    <span style="font-size:10px;font-weight:700;color:var(--z4);text-transform:uppercase;letter-spacing:.08em;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:4px;padding:2px 8px">Path B ⚡ Already have a PRD</span>
+    <span style="font-size:10px;color:var(--muted)">~15 min · skip Zones 1–3</span>
+  </div>
+
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="flow-step-node" style="color:var(--zu);border-color:var(--zu);background:rgba(100,116,139,0.1)">⚙</div>
+      <div class="flow-step-label" style="color:var(--muted2)">Bootstrap</div>
+      <div class="flow-step-cmd">/pm-import</div>
+    </div>
+    <div class="flow-line"></div>
+    <div class="flow-step">
+      <div class="flow-step-node" style="color:var(--z4);border-color:var(--z4);background:rgba(245,158,11,0.1)">⚡</div>
+      <div class="flow-step-label" style="color:var(--z4)">PRD → Brief</div>
+      <div class="flow-step-cmd">/pm-agent-brief</div>
+    </div>
+    <div class="flow-line"></div>
+    <div class="flow-step">
+      <div class="flow-step-node" style="color:var(--accent3);border-color:var(--accent3);background:rgba(52,211,153,0.1)">✓</div>
+      <div class="flow-step-label" style="color:var(--accent3)">Validate</div>
+      <div class="flow-step-cmd">prodman validate</div>
+    </div>
+    <div class="flow-line"></div>
+    <div class="flow-step">
+      <div class="flow-step-node" style="color:var(--z4);border-color:var(--z4);background:rgba(245,158,11,0.1)">6</div>
+      <div class="flow-step-label" style="color:var(--z4)">Handover</div>
+      <div class="flow-step-cmd">/pm-handoff</div>
+    </div>
+    <div class="flow-line"></div>
+    <div class="flow-step">
+      <div class="flow-step-node" style="color:var(--z5);border-color:var(--z5);background:rgba(248,113,113,0.1)">7</div>
+      <div class="flow-step-label" style="color:var(--z5)">Ship</div>
+      <div class="flow-step-cmd">/pm-ship</div>
+    </div>
+    <div class="flow-line"></div>
+    <div class="flow-step">
+      <div class="flow-step-node" style="color:var(--z5);border-color:var(--z5);background:rgba(248,113,113,0.1)">8</div>
+      <div class="flow-step-label" style="color:var(--z5)">Retro</div>
+      <div class="flow-step-cmd">/pm-retro</div>
+    </div>
+    <div class="flow-line" style="background:linear-gradient(to right,var(--border),transparent)"></div>
+    <div class="flow-step">
+      <div class="flow-step-node" style="color:var(--accent3);border-color:var(--accent3);background:rgba(52,211,153,0.1);font-size:16px">↺</div>
+      <div class="flow-step-label" style="color:var(--accent3)">Memory Updated</div>
+      <div class="flow-step-cmd">next feature smarter</div>
+    </div>
+  </div>
+
 </div>
 
 <!-- ── MEMORY BAR ── -->
@@ -994,6 +1087,180 @@
 <div class="section-divider"></div>
 
 <!-- ══════════════════════════════════════════
+     CHOOSE YOUR PATH
+══════════════════════════════════════════ -->
+<div id="paths" style="max-width:960px;margin:0 auto 56px auto;padding:0 20px">
+
+  <div style="text-align:center;margin-bottom:32px">
+    <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Where do you start?</div>
+    <div style="font-size:22px;font-weight:700;color:var(--text)">Choose your path</div>
+    <div style="font-size:13px;color:var(--muted2);margin-top:8px">Both paths end at the same place — a validated, agent-ready brief. Pick based on where you are today.</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+    <!-- PATH 1: Starting from scratch -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--z1);border-radius:12px;padding:28px;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <span style="font-size:20px">🔵</span>
+        <span style="font-size:15px;font-weight:700;color:var(--z1)">Starting from a signal</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Complex or high-stakes feature · fuzzy problem space</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)">⏱ 2–3 short sessions &nbsp;·&nbsp; 5 commands</div>
+
+      <!-- Steps -->
+      <div style="display:flex;flex-direction:column;gap:0;flex:1">
+
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(100,116,139,0.15);border:1px solid var(--zu);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--zu);flex-shrink:0">0</div>
+            <div style="width:1px;background:var(--border);flex:1;min-height:20px;margin:3px 0"></div>
+          </div>
+          <div style="padding-bottom:16px">
+            <div style="font-size:12px;font-weight:600;color:var(--muted2);font-family:monospace">/pm-import</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Bootstrap product memory once — product, users, constraints</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(107,127,255,0.12);border:1px solid var(--z1);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--z1);flex-shrink:0">1</div>
+            <div style="width:1px;background:var(--border);flex:1;min-height:20px;margin:3px 0"></div>
+          </div>
+          <div style="padding-bottom:16px">
+            <div style="font-size:12px;font-weight:600;color:var(--z1);font-family:monospace">/pm-signal</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Drop the raw signal. ProdMan asks one question at a time — writes <code style="font-size:10px">signal.md</code></div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(107,127,255,0.12);border:1px solid var(--z1);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--z1);flex-shrink:0">2</div>
+            <div style="width:1px;background:var(--border);flex:1;min-height:20px;margin:3px 0"></div>
+          </div>
+          <div style="padding-bottom:16px">
+            <div style="font-size:12px;font-weight:600;color:var(--z1);font-family:monospace">/pm-frame &nbsp;/pm-explore</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">3 framings to react against, then 6-dimension deep-dive — writes <code style="font-size:10px">framing.md</code> + <code style="font-size:10px">exploration.md</code></div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(107,127,255,0.12);border:1px solid var(--z1);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--z1);flex-shrink:0">3</div>
+            <div style="width:1px;background:var(--border);flex:1;min-height:20px;margin:3px 0"></div>
+          </div>
+          <div style="padding-bottom:16px">
+            <div style="font-size:12px;font-weight:600;color:var(--z1);font-family:monospace">/pm-commit</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Lock direction. Loads all Zone 1 files — works across sessions — writes <code style="font-size:10px">commitment.md</code></div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(167,139,250,0.12);border:1px solid var(--z2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--z2);flex-shrink:0">4</div>
+            <div style="width:1px;background:var(--border);flex:1;min-height:20px;margin:3px 0"></div>
+          </div>
+          <div style="padding-bottom:16px">
+            <div style="font-size:12px;font-weight:600;color:var(--z2);font-family:monospace">/pm-ff</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Full spec bundle — brief, PRD, approach, plan + <code style="font-size:10px">agent-brief.md</code> as primary output</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(52,211,153,0.12);border:1px solid var(--solve);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--solve);flex-shrink:0">✓</div>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--solve)">Agent Ready</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Fix lint errors → status bar shows <code style="font-size:10px">✓ 12/12</code> → launch</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PATH 2: Already have a PRD -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--z4);border-radius:12px;padding:28px;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <span style="font-size:20px">⚡</span>
+        <span style="font-size:15px;font-weight:700;color:var(--z4)">Already have a PRD</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">PRD from Claude, ChatGPT, Notion, Jira, or Linear · known problem</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)">⏱ ~15 minutes &nbsp;·&nbsp; 1 command</div>
+
+      <!-- Steps -->
+      <div style="display:flex;flex-direction:column;gap:0;flex:1">
+
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(100,116,139,0.15);border:1px solid var(--zu);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--zu);flex-shrink:0">0</div>
+            <div style="width:1px;background:var(--border);flex:1;min-height:20px;margin:3px 0"></div>
+          </div>
+          <div style="padding-bottom:16px">
+            <div style="font-size:12px;font-weight:600;color:var(--muted2);font-family:monospace">/pm-import</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Bootstrap product memory once — paste existing docs to skip ahead</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(245,158,11,0.12);border:1px solid var(--z4);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--z4);flex-shrink:0">1</div>
+            <div style="width:1px;background:var(--border);flex:1;min-height:20px;margin:3px 0"></div>
+          </div>
+          <div style="padding-bottom:16px">
+            <div style="font-size:12px;font-weight:600;color:var(--z4);font-family:monospace">/pm-agent-brief</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Paste your PRD. ProdMan extracts scope, requirements, AC — fills gaps with targeted questions</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(245,158,11,0.12);border:1px solid var(--z4);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--z4);flex-shrink:0">2</div>
+            <div style="width:1px;background:var(--border);flex:1;min-height:20px;margin:3px 0"></div>
+          </div>
+          <div style="padding-bottom:16px">
+            <div style="font-size:12px;font-weight:600;color:var(--z4)">Review lint errors</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Red squiggles show gaps — Quick Fix inserts templates — typically 5 minutes to close</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(52,211,153,0.12);border:1px solid var(--solve);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--solve);flex-shrink:0">✓</div>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--solve)">Agent Ready</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Status bar shows <code style="font-size:10px">✓ 12/12</code> → launch agent</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PRD sources -->
+      <div style="margin-top:24px;padding-top:16px;border-top:1px solid var(--border)">
+        <div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Works with any PRD format</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <span style="font-size:10px;color:var(--muted2);background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 8px">Claude / ChatGPT output</span>
+          <span style="font-size:10px;color:var(--muted2);background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 8px">Notion doc</span>
+          <span style="font-size:10px;color:var(--muted2);background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 8px">Jira ticket</span>
+          <span style="font-size:10px;color:var(--muted2);background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 8px">Linear issue</span>
+          <span style="font-size:10px;color:var(--muted2);background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 8px">Google Doc</span>
+          <span style="font-size:10px;color:var(--muted2);background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 8px">Rough notes</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--muted)">
+    Both paths produce the same output — a validated <code style="font-size:10px">agent-brief.md</code> that passes all 12 lint rules. The full 5-zone flow is for when you need the thinking, not just the output.
+  </div>
+
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════════
      ZONE 1 — MATERIALIZATION
 ══════════════════════════════════════════ -->
 <div id="zone1" class="zone z1">
@@ -1027,6 +1294,14 @@
           <div class="pain-row"><span class="pain-tag">Pain</span><span>Describe a complaint to an LLM — it immediately writes a solution. Problem isn't understood yet.</span></div>
           <div class="solve-row"><span class="solve-tag">Solve</span><span>Reflects back first, then asks one focused question. Separates symptom from root cause before any spec work.</span></div>
         </div>
+        <details class="cmd-example">
+          <summary>Example</summary>
+          <pre>Input:  /pm-signal "Users keep abandoning checkout"
+
+→  "Heard: checkout drop-off is higher than expected.
+    Before we spec anything — do you know at which
+    step most users are leaving?"</pre>
+        </details>
       </div>
     </div>
 
@@ -1233,6 +1508,20 @@
           <div class="pain-row"><span class="pain-tag">Pain</span><span>Writing spec docs is manual, slow, and inconsistent. Different PMs produce different formats. Agents receive a PRD dump and guess at scope, priority, and what NOT to build.</span></div>
           <div class="solve-row"><span class="solve-tag">Solve</span><span>5-file spec bundle in one shot. Agent brief as the primary output — bounded, testable, explicit. Engineers, designers, and agents all get the right format automatically.</span></div>
         </div>
+        <details class="cmd-example">
+          <summary>agent-brief.md snippet</summary>
+          <pre>## In Scope
+- Guest checkout (no account required)
+- Save card option (opt-in only)
+
+## Must NOT Do
+- Do not modify logged-in checkout path
+- Do not add upsell prompts
+
+## Escalation Triggers
+- Stop if payment API returns undocumented errors
+- Stop if cart total > $10,000 — escalate to PM</pre>
+        </details>
       </div>
     </div>
   </div>
@@ -1320,10 +1609,10 @@
 
     <div class="cmd-card z4">
       <div class="cmd-name">/pm-agent-brief</div>
-      <div class="cmd-tagline">Standalone agent brief — for AI coding agents</div>
+      <div class="cmd-tagline">PRD → validated agent brief — skip Zones 1–3</div>
       <div class="cmd-section-label">Use when</div>
       <div class="cmd-items">
-        <div class="cmd-item">You have existing docs from outside ProdMan</div>
+        <div class="cmd-item">You have a PRD from Claude, ChatGPT, Notion, Jira, or Linear</div>
         <div class="cmd-item">Regenerating after handoff-eng updates</div>
         <div class="cmd-item">Targeting a different agent or scope</div>
       </div>
@@ -1334,8 +1623,8 @@
       </div>
       <div class="cmd-output"><span class="output-file">agent-brief.md</span></div>
       <div class="pain-solve">
-        <div class="pain-row"><span class="pain-tag">Pain</span><span>AI agents working from PRDs overengineer, miss scope boundaries, and can't self-verify their output.</span></div>
-        <div class="solve-row"><span class="solve-tag">Solve</span><span>Structured for agent consumption — bounded, testable, with explicit escalation triggers.</span></div>
+        <div class="pain-row"><span class="pain-tag">Pain</span><span>PRDs are written for humans. Agents overengineer, miss scope boundaries, and can't self-verify their output.</span></div>
+        <div class="solve-row"><span class="solve-tag">Solve</span><span>Converts your existing PRD into a bounded, testable agent brief — validated against all 12 lint rules.</span></div>
       </div>
     </div>
 
@@ -1425,6 +1714,22 @@
       <span class="retro-loop-arrow">→</span>
       <span class="retro-loop-node" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:var(--accent4)">agents get better context</span>
       <span class="retro-loop-arrow">↺</span>
+    </div>
+
+    <!-- 3-feature learning arc -->
+    <div style="margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px 16px">
+        <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">Feature 1 — Cold start</div>
+        <div style="font-size:11px;color:var(--muted2);line-height:1.6">No history. AI works from <code style="font-size:10px;color:var(--accent)">product.md</code> and <code style="font-size:10px;color:var(--accent)">users.md</code> only. Good — but generic.</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid rgba(52,211,153,0.2);border-radius:8px;padding:14px 16px">
+        <div style="font-size:10px;font-weight:700;color:var(--accent3);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">Feature 2 — Warm</div>
+        <div style="font-size:11px;color:var(--muted2);line-height:1.6"><code style="font-size:10px;color:var(--accent3)">history.md</code> now has Feature 1's learnings. AI avoids the same mistakes. Framing is sharper.</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid rgba(107,127,255,0.3);border-radius:8px;padding:14px 16px">
+        <div style="font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">Feature 3 — Compound</div>
+        <div style="font-size:11px;color:var(--muted2);line-height:1.6">Two retros in. AI references past decisions, flags contradictions, proposes options grounded in what actually shipped.</div>
+      </div>
     </div>
   </div>
 </div>
@@ -1932,7 +2237,7 @@
 
 <!-- ── FOOTER ── -->
 <footer>
-  <span>ProdMan v0.3.0 — AI-native PM framework</span>
+  <span>ProdMan v0.3.1 — AI-native PM framework</span>
   <span>MIT License · <a href="https://github.com/VisNavyVet/PRODMAN" target="_blank">github.com/VisNavyVet/PRODMAN</a></span>
 </footer>
 
