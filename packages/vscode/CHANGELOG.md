@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.2
+
+- README and user-journey doc updates: Marketplace install as primary path, correct version references
+- VS Code badge links directly to Marketplace listing
+- GitHub Action reference replaced with `prodman validate --all` CI guidance
+
+## 0.3.1
+
+- esbuild bundler replacing tsc build
+- Real extension icon (128×128)
+- CHANGELOG, LICENSE, and scripts/build.js added
+- `.vscodeignore` and `.gitignore` packaging cleanup
+
 ## 0.3.0
 
 - Context Health sidebar panel — prodman-context/ file health at a glance, with stack drift detection

@@ -4,9 +4,9 @@
 [![AI Agnostic](https://img.shields.io/badge/AI-Agnostic-green)](integrations/universal.md)
 [![Works with Claude Code](https://img.shields.io/badge/Works%20with-Claude%20Code-blue)](https://claude.ai/code)
 [![Works with Cursor](https://img.shields.io/badge/Works%20with-Cursor-black)](https://cursor.sh)
-[![Version](https://img.shields.io/badge/version-0.3.1-brightgreen)]()
+[![Version](https://img.shields.io/badge/version-0.3.2-brightgreen)]()
 [![npm @prodman/cli](https://img.shields.io/badge/npm-%40prodman%2Fcli-red)](https://www.npmjs.com/package/@prodman/cli)
-[![VS Code Extension](https://img.shields.io/badge/VS%20Code-%40prodman%2Fvscode-007ACC)](packages/vscode)
+[![VS Code Extension](https://img.shields.io/badge/VS%20Code-%40prodman%2Fvscode-007ACC)](https://marketplace.visualstudio.com/items?itemName=prodman.prodman)
 
 **An open-source PM framework for teams building with AI agents.**
 Structured thinking. Persistent product memory. Agent-ready output — from signal to ship.
@@ -195,7 +195,10 @@ That's what the agent receives. Bounded. Testable. No guessing.
 **Install:**
 
 ```bash
-# From Marketplace: search "ProdMan" in VS Code Extensions
+# From Marketplace (recommended):
+code --install-extension prodman.prodman
+# Or search "ProdMan" in the VS Code Extensions panel
+
 # From source:
 cd packages/vscode
 npm install && npm run build
@@ -249,15 +252,7 @@ prodman status
 
 **Add to CI — block merges on incomplete specs:**
 
-```yaml
-# .github/workflows/spec-check.yml
-- uses: VisNavyVet/PRODMAN/actions/validate@v0.1.0
-  with:
-    fail-on: incomplete          # or: review-needed
-    features-dir: features       # default
-```
-
-Output: `readiness` output variable (`agent-ready` | `review-needed` | `incomplete`). Exit 1 on threshold breach. Prints full diagnostics in CI log.
+Run `prodman validate --all` in your CI pipeline to catch incomplete specs before merge. GitHub Action coming soon.
 
 The core library (`@prodman/core`) is zero-dependency and importable directly in any Node.js project:
 
